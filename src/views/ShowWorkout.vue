@@ -8,7 +8,7 @@
         Creator: {{ workout.creator }} <br />
         Program:
         <div v-for="(exercise, idx) in workout.workout" class="border-4 border-teal-400">
-          {{ exercise.name }} - Sets: {{ exercise.sets }} - Redps:{{ exercise.reps }}
+          {{ exercise.name }} - Sets: {{ exercise.sets }} - Reps:{{ exercise.reps }}
         </div>
       </div>
     </div>
