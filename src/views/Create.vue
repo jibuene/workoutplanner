@@ -55,7 +55,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import json from '../../public/exercises/exercises.json'
+import json from '../../public/exercises.json'
 import newFilter from '@/components/newFilter.vue'
 import exerciseModal from '@/components/exerciseModal.vue'
 import saveWorkoutModal from '@/components/saveWorkoutModal.vue'

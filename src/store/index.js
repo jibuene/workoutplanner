@@ -9,11 +9,13 @@ export default createStore({
   state: {
     workoutPlans: [],
     user: [],
-    userToken: ''
+    userSavedWorkouts: [],
+    userToken: '',
+    workout: []
   },
   actions: {
     async getWorkouts ({ state, commit }) {
-      const data = await axios.get('http://localhost:3000')
+      const data = await axios.get('http://localhost:3000/get-all-workouts')
       commit('setWorkoutPlans', data.data)
     },
     async saveWorkout ({ state }, data) {
@@ -29,8 +31,21 @@ export default createStore({
     async authUser ({ state }, user) {
       return axios.post('http://localhost:3000/auth-user', user)
     },
+    async getWorkoutById ({ state }, id) {
+      const result = await axios.post('http://localhost:3000/get-workout-by-id', { id: id })
+      state.workout = result.data
+    },
+    async getSavedWorkouts ({ state }, user) {
+      const workouts = await axios.post('http://localhost:3000/get-saved-workouts', { username: user.username })
+      console.log(workouts)
+      state.userSavedWorkouts = workouts.data
+    },
     async getUserCookie ({ state }) {
       const user = cookies.get('user')
+      if (!user) {
+        state.user = null
+        return
+      }
       const userIsValid = await axios.post('http://localhost:3000/verify-token', user)
       if (userIsValid.data.message !== 'Errytinn OKI') {
         return console.log('Token not valid')
@@ -65,31 +80,13 @@ export default createStore({
           timer: 1500
         })
       }
-      // const userData = await dispatch('findUserData', user.username)
-      // if (userData.data.length === 0) {
-      //   return Swal.fire({
-      //     icon: 'question',
-      //     title: 'Found no user with username "' + user.username + '"'
-      //   })        
-      // }
-      // if (bcrypt.compareSync(user.password, userData.data.password)) {
-      //   Swal.fire({
-      //     icon: 'success',
-      //     title: 'You have been logged in',
-      //     showConfirmButton: false,
-      //     timer: 1500
-      //   })
-      // } else {
-      //   return Swal.fire({
-      //     icon: 'error',
-      //     title: 'Wrong password'
-      //   })
-      // }
     }
   },
   getters: {
     workoutPlans: (state) => state.workoutPlans,
-    loggedInUser: (state) => state.user
+    loggedInUser: (state) => state.user,
+    userSavedWorkouts: (state) => state.userSavedWorkouts,
+    workout: (state) => state.workout
   },
   mutations: {
     setWorkoutPlans (state, data) {

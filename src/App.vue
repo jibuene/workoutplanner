@@ -14,13 +14,13 @@ setInterval(() => {
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold leading-tight text-gray-900">
           <span class="text-sky-400 font-light italic">ONLY</span> GAINS / {{ $route.meta.title }}
+          <span class="text-3xl italic text-sky-500 float-right font-normal" v-if="loggedInUser.username?.length > 0">WELCOME {{ loggedInUser.username }}</span>
           <router-link
             to="/Login"
-            v-if="loggedInUser.length === 0"
+            v-else
             class="text-3xl italic text-sky-500 float-right font-normal">
             Login
           </router-link>
-          <span class="text-3xl italic text-sky-500 float-right font-normal" v-else>WELCOME {{ loggedInUser.username }}</span>
         </h1>
       </div>
     </header>
