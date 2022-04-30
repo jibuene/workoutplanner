@@ -1,35 +1,64 @@
 <template>
-  <div class="bg-gray-20 mx-2" v-if="exercises.length > 0">
-    <div class="flex justify-center">
-      <div class="flex justify-center bg-neutral-400 w-full border-b-2 border-neutral-900">
-        <template v-for="(object, idx) in Object.keys(exercises[0])" :key="idx" class="">
-          <newFilter v-if="!['instructions', 'name'].includes(object)" :id="object" :title_text="object" :listdata="this.returnDistinct(this.exercises, object)" v-model="workoutFilter[idx]"/>
-        </template>
-      </div>
-    </div>
-    <div>
-      Current workout program
-      <programViewer :program="workoutProgram.workout.filter(x => x !== null)" />
-      <button
-        type="button"
-        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
-        @click="showSaveWorkoutModal = true"
-      >
-        Save workout
-      </button>
-    </div>
-    <div>
+<div>
+  <div v-if="workoutProgram.workout.length > 0">
+    Current workout program
+    <table class="table table-compact w-full">
+      <thead>
+        <tr>
+          <td class="bg-sky-400 text-sky-100 border-sky-700">Exercise</td>
+          <th class="bg-sky-400 text-sky-100 border-sky-700">Sets</th>
+          <th class="bg-sky-400 text-sky-100 border-sky-700">Reps</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr v-for="(exercise, idx) in workoutProgram.workout.filter(x => x !== null)" :key="idx">
+          <td>{{ exercise.name }}</td>
+          <td>{{ exercise.sets }}</td>
+          <td>{{ exercise.reps }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary my-3" @click="showSaveWorkoutModal = true">
+      Save workout
+    </button>
+  </div>
+  <div class="lg:flex lg:justify-between" v-if="exercises.length > 0">
+    <!-- <div>
       Current Filter:
       <li v-for="(filter, idx) in workoutFilter.filter(x => x !== null)" :key="idx">{{ filter }}</li>
-    </div>
-    <br />
+    </div> -->
+    <div class="p-2 bg-base-100 rounded">
+      <div class="text-center">
+        <label class="uppercase tracking-wide text-xs font-bold">
+          Search exercises
+        </label>
+        <input 
+          class="input w-full bg-base-300"
+          id="grid-zip"
+          type="text"
+          placeholder=""
+          v-model="workoutTextFilter">
+      </div>
+      <div v-for="(object, idx) in Object.keys(exercises[0])" :key="idx" class="">
+        <exerciseFilter
+          v-if="!['instructions', 'name'].includes(object)"
+          :id="object"
+          :title_text="object"
+          :listdata="this.returnDistinct(this.exercises, object)"
+          v-model="workoutFilter[idx]"
+        />
+      </div>
+      <hr />
     Results: {{ filterJson.length }}
-    <div class="grid grid-cols-3 gap-1 justify-evenly text-center">
-      <div v-for="(exercise, idx) in filterJson" :key="idx" class="bg-blue-900 w-26 h-14 rounded-lg text-white" @click="selectedExercise = exercise, showExerciseModal=true">{{ exercise.name }}</div>
+
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-1 justify-evenly text-center p-5 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5">
+      <div v-for="(exercise, idx) in filterJson" :key="idx" class="bg-base-300 md:h-12 h-24 rounded-lg justify-center" @click="selectedExercise = exercise, showExerciseModal=true">{{ exercise.name }}</div>
     </div>
     <exerciseModal v-if="showExerciseModal" :exercise="selectedExercise" @addToWorkout="addToWorkout" @cancel="showExerciseModal = false" />
     <saveWorkoutModal v-if="showSaveWorkoutModal" :workout="workoutProgram" @close="showSaveWorkoutModal = false"/>
   </div>
+</div>
 </template>
 
     // EXAMPLE DATASET
@@ -56,7 +85,7 @@
 <script>
 import { mapActions } from 'vuex'
 import json from '../../public/exercises.json'
-import newFilter from '@/components/newFilter.vue'
+import exerciseFilter from '@/components/exerciseFilter.vue'
 import exerciseModal from '@/components/exerciseModal.vue'
 import saveWorkoutModal from '@/components/saveWorkoutModal.vue'
 import programViewer from '@/components/programViewer.vue'
@@ -64,7 +93,7 @@ import programViewer from '@/components/programViewer.vue'
 export default {
   name: 'Create',
   components: {
-    newFilter,
+    exerciseFilter,
     exerciseModal,
     saveWorkoutModal,
     programViewer
@@ -74,14 +103,15 @@ export default {
       exercises: [],
       level: 'dx',
       workoutFilter: [],
+      workoutTextFilter: [],
       showExerciseModal: false,
       showSaveWorkoutModal: false,
       selectedExercise: [],
       workoutProgram: {
-        name: 'xd',
-        comment: 'loltest',
+        name: '',
+        comment: '',
         workout: [],
-        creator: 'JIB'
+        creator: ''
       }
     }
   },
@@ -112,6 +142,10 @@ export default {
   computed: {
     filterJson () {
       let newArr = this.exercises
+      if (this.workoutTextFilter.length > 0) {
+        const rgxp = new RegExp(`${this.workoutTextFilter.toLowerCase()}*`, 'g')
+        newArr = newArr.filter(x => x.name.toLowerCase().match(rgxp))
+      }
       Object.keys(newArr[0]).map((object, idx) => {
         if (this.workoutFilter[idx]?.length > 0) {
           if (['primaryMuscles', 'secondaryMuscles'].includes(object)) {

@@ -1,43 +1,63 @@
 
 <template>
-  <div class="h-full flex flex-col bg-gray-100 dark:bg-gray-700 shadow-xl overflow-y-scroll">
-    <div class="ml-3 h-7 flex justify-end items-center">
-      <button type="button"
-        class="bg-gray-100 dark:bg-gray-700 m-1 p-3 justify-end rounded-md text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500">
-        <span class="sr-only">Close panel</span>
-        <!-- Heroicon name: outline/x -->
-        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-    <div class="bg-green-300 shadow-lg pb-3 rounded-b-3xl">
-      <div class="flex  rounded-b-3xl bg-gray-100 dark:bg-gray-700 space-y-5 flex-col items-center py-7">
-        <!-- <img class="h-28 w-28 rounded-full"
-          src="https://s3-eu-west-1.amazonaws.com/turistforeningen/images/lz/3Q/g5-940.jpeg"
-          alt="User"> -->
-        <span class="text-3xl font-normal">{{ loggedInUser.username }}</span>
+<div>
+  <div>
+    <h1 class="text-3xl font-bold">Completed workouts</h1>
+    <table class="table table-compact w-full mt-3">
+      <thead>
+        <tr>
+          <td class="bg-sky-400 text-sky-100 border-sky-700">Date</td>
+          <th class="bg-sky-400 text-sky-100 border-sky-700">Program Name</th>
+          <th class="bg-sky-400 text-sky-100 border-sky-700">Comment</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr v-for="(exercise, idx) in completedWorkouts" :key="idx">
+          <td>{{ exercise.date.substring(0,10) }}</td>
+          <td>{{ exercise.name }}</td>
+          <td class="whitespace-pre-line">{{ exercise.comment }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="my-5">
+    <h1 class="text-3xl font-bold">Favorites ⭐</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
+      <div v-for="(plan, idx) in userSavedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+        <div class="card-body p-3 md:p-6">
+          <div class="card-title">{{ plan.name }}</div>
+          <p class="text-sm">{{ plan.comment }}</p>
+          <div v-for="(workout) in plan.workout" :key="workout._id">
+            <p class="text-xs md:text-sm truncate">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</p>
+          </div>
+        </div>
+        <label class="label p-3 md:p-6">
+          <p class="label-text-alt truncate">Created by: {{ plan.creator }}</p>
+          <p class="label-text-alt truncate">Tags: {{ plan.tags }}</p>
+        </label>
       </div>
     </div>
-
-    Saved Programs
-    <div class="grid rounded-2xl divide-y divide-dashed hover:divide-solid  justify-evenly bg-gray-50 dark:bg-gray-300 m-3 mt-10 grid-cols-3">
-      <div class="col-span-1 p-3"  v-for="workout in userSavedWorkouts" :key="workout._id">
-        <div class="flex flex-col">
-          Name: {{ workout.name }} <br />
-          Comment: {{ workout.comment }} <br />
-          Creator: {{ workout.creator }} <br />
-          Program:
-          <li v-for="(exercise, idx) in workout.workout">
-            {{ exercise.name }} - Sets: {{ exercise.sets }} - Reps:{{ exercise.reps }}
-          </li>
+    <p class="leading-none flex justify-evenly">Click on a workout to show it</p>
+  </div>
+  <div>
+    <h1 class="text-3xl font-bold">User created workouts</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
+      <div v-for="(plan, idx) in userCreatedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+        <div class="card-body p-3 md:p-6">
+          <div class="card-title">{{ plan.name }}</div>
+          <p class="text-sm">{{ plan.comment }}</p>
+          <div v-for="(workout) in plan.workout" :key="workout._id">
+            <p class="text-xs md:text-sm truncate">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</p>
+          </div>
         </div>
+        <label class="label p-3 md:p-6">
+          <p class="label-text-alt truncate">Created by: {{ plan.creator }}</p>
+          <p class="label-text-alt truncate">Tags: {{ plan.tags }}</p>
+        </label>
       </div>
     </div>
   </div>
+</div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
@@ -70,19 +90,28 @@ export default {
       'createUser',
       'loginUser',
       'getSavedWorkouts',
-      'getUserCookie'
-    ])
+      'getUserCookie',
+      'getCompletedWorkouts',
+      'getCreatedWorkouts'
+    ]),
+    goToWorkout (id) {
+      return this.$router.push({ path: '/workout/' + id })
+    }
   },
   computed: {
     ...mapGetters([
       'workoutPlans',
       'loggedInUser',
-      'userSavedWorkouts'
+      'userSavedWorkouts',
+      'completedWorkouts',
+      'userCreatedWorkouts'
     ])
   },
   async mounted() {
     await this.getUserCookie()
     await this.getSavedWorkouts(this.loggedInUser)
+    await this.getCompletedWorkouts(this.loggedInUser)
+    await this.getCreatedWorkouts(this.loggedInUser)
   }
 }
 </script>

@@ -1,19 +1,19 @@
 <template>
-  <div class="bg-gray-50">
-    <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
-      <h2 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10">
-        THE NEW WORKOUT PLANNER 3002
-      </h2>
-    </div>
-    <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
+  <div class="max-w-screen-xl">
+    <article class="prose">
+      <h1>WORKOUT PLANNER 3002</h1>
+      <p>Your one stop shop for workout programs.</p>
+    </article>
+
+    <div class="lg:flex sm:flex justify-between py-16">
       <router-link
         to="/create"
-        class="inline-flex rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-white transition duration-150 ease-in-out hover:bg-indigo-500">
+        class="btn btn-primary mb-3 md:mb-0 flex">
           Click here to create workout
       </router-link>
       <router-link
         to="/browse"
-        class="inline-flex rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-white transition duration-150 ease-in-out hover:bg-indigo-500">
+        class="btn btn-primary flex">
           Click here to browse workouts
       </router-link>
     </div>

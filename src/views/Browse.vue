@@ -1,33 +1,31 @@
 
 <template>
-  <div class="bg-gray-50 px-3">
-    <div class="w-full md:mb- text-center">
-      <label class="uppercase tracking-wide text-gray-700 text-xs font-bold my-2">
+  <div>
+    <div class="form-control md:mb- text-center bg-base-100 p-2 rounded mb-2">
+      <label class="uppercase tracking-wide text-xs font-bold">
         Search workouts
       </label>
       <input 
-        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        class="input w-full bg-base-300"
         id="grid-zip"
         type="text"
         placeholder=""
         v-model="workoutFilter">
-      <hr class="border-0 bg-gray-500 text-gray-500 h-px mt-3 mb-3">
+      <hr class="border-0 bg-base-100 h-px mt-3">
     </div>
-    <div class="lg:max-w-full lg:flex grid grid-cols-3 gap-2 justify-evenly text-center">
-      <div v-for="(plan, idx) in filterWorkoutsByTag" :key="idx" class="border-r border-b border-t border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-        <div class="mb-8">
-          <div class="text-gray-900 font-bold text-xl mb-2">{{ plan.name }}</div>
-          <p class="text-sm text-gray-600">{{ plan.comment }}</p>
-          <template v-for="(workout) in plan.workout" :key="workout._id">
-            <li class="truncate ">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</li>
-          </template>
-        </div>
-        <div class="text-center">
-          <div class="text-sm">
-            <p class="text-gray-900 leading-none">Created by: {{ plan.creator }}</p>
-            <p class="text-gray-900 leading-none">Tags: {{ plan.tags }}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly">
+      <div v-for="(plan, idx) in filterWorkoutsByTag" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+        <div class="card-body p-3 md:p-6">
+          <div class="card-title">{{ plan.name }}</div>
+          <p class="text-sm">{{ plan.comment }}</p>
+          <div v-for="(workout) in plan.workout" :key="workout._id">
+            <p class="text-xs md:text-sm truncate">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</p>
           </div>
         </div>
+        <label class="label p-3 md:p-6">
+          <span class="label-text-alt">Created by: {{ plan.creator }}</span>
+          <span class="label-text-alt">Tags: {{ plan.tags }}</span>
+        </label>
       </div>
     </div>
   </div>
@@ -45,7 +43,10 @@ export default {
   methods: {
     ...mapActions([
       'getWorkouts'
-    ])
+    ]),
+    goToWorkout (id) {
+      return this.$router.push({ path: '/workout/' + id })
+    }
   },
   computed: {
     ...mapGetters([

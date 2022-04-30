@@ -1,24 +1,15 @@
 <template>
-  <div class="checkbox-select border-x-2 border-neutral-900/10">
+  <div class="checkbox-select">
     <div class="checkbox-select__trigger" :class="{ isActive: activeTrigger }" @click="showDropdown">
-      <span class="checkbox-select__title text-white">{{ title_text.toUpperCase() }}</span>
+      <span class="checkbox-select__title">{{ title_text.toUpperCase() }}</span>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129"><path d="M121.3 34.6c-1.6-1.6-4.2-1.6-5.8 0l-51 51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8 0-1.6 1.6-1.6 4.2 0 5.8l53.9 53.9c.8.8 1.8 1.2 2.9 1.2 1 0 2.1-.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2.1-5.8z"/></svg>
     </div>
-    <div :id="id" class="checkbox-select__dropdown" :class="{ activeSearch: showLoader }">
-      <div class="checkbox-select__search-wrapp">
-        <input type="text" @focus="showLoader = true" @blur="showLoader = false" placeholder="søk..." v-model="search">
-      </div>
-      <div class="checkbox-select__col">
-        <div class="checkbox-select__select-all"><label :for="id + 'selectAll'">{{ selectAllText }}</label>
-          <input type="checkbox" :id="id + 'selectAll'" @click="allSelected = !allSelected, selectAll()"></div>
-        <div class="checkbox-select__info">{{ checkedFilters.length }} VALGT</div>
-      </div>
-      <ul id="customScroll" class="checkbox-select__filters-wrapp" data-simplebar-auto-hide="false">
+    <div :id="id" class="checkbox-select__dropdown bg-base-300" :style="[activeTrigger ? 'position: relative' : '']">
+      <ul id="customScroll" class="checkbox-select__filters-wrapp">
         <li v-for="(filter, index) in filteredList" :key="id + index">
-          <div class="checkbox-select__check-wrapp">
+          <div class="checkbox-select__check-wrapp py-1">
             <input :id="id + index" class="conditions-check" v-model="checkedFilters" :value="filter" type="checkbox">
-            <label v-if="filter !== null" :for="id + index">{{ filter }}</label>
-            <label :for="id + index" v-else>NULL</label>
+            <label v-if="filter !== null" :for="id + index">{{ filter.toUpperCase() }}</label>
           </div>
         </li>
       </ul>
@@ -27,6 +18,7 @@
 </template>
 <script>
 import { gsap, Power2 } from 'gsap'
+import { SimpleBar } from 'simplebar-vue3';
 
 export default {
   props: ['title_text', 'id', 'listdata'],
@@ -41,6 +33,7 @@ export default {
       showLoader: false
     }
   },
+  components: { SimpleBar },
   computed: {
     filteredList () {
       return this.listdata.filter(item => {
@@ -71,7 +64,7 @@ export default {
             autoAlpha: 1,
             y: 0,
             ease: Power2.easeOut,
-            duration: 0.55
+            duration: 0.1
           }
         )
       } else {
@@ -83,7 +76,7 @@ export default {
             autoAlpha: 0,
             y: -10,
             ease: Power2.easeOut,
-            duration: 0.2
+            duration: 0.1
           })
       }
     }
@@ -104,7 +97,6 @@ ul {
 }
 .checkbox-select {
   position: relative;
-  max-width: 370px;
   width: 100%;
   &__trigger {
     border-radius: 10px;
@@ -114,8 +106,6 @@ ul {
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 0 15px;
-    transition: all 0.4s ease;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -129,7 +119,7 @@ ul {
     svg {
       width: 28px;
       stroke: 4px;
-      transition: all 0.4s ease;
+      transition: all 0.3s ease;
     }
   }
   &__title {
@@ -141,29 +131,24 @@ ul {
     z-index: 99;
     opacity: 0;
     visibility: hidden;
-    background: #fff;
     position: absolute;
     min-width: 200px;
     left: 0;
     right: 0;
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    // box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
     border-radius: 0 0 8px 8px;
     overflow: hidden;
     padding-bottom: 15px;
-    &:after,
     &:before {
       position: absolute;
       content: "";
       top: 0;
-      display: block;
       height: 4px;
       z-index: 1;
     }
     &:after {
       opacity: 0;
       background: #000;
-      left: -200px;
-      width: 200px;
       background-color: #2980b9;
       transition: opacity 0.3s ease;
       animation: load 1.8s linear infinite;
@@ -226,7 +211,6 @@ ul {
   }
   &__filters-wrapp {
     margin-top: 20px;
-    height: 297px;
     overflow-y: auto;
   }
   &__check-wrapp {
@@ -244,7 +228,7 @@ ul {
         user-select: none;
         transition: padding 0.25s ease;
         &:after {
-          border: solid 2px #000;
+          border: solid 2px #fff;
           content: "";
           width: 22px;
           height: 22px;
@@ -259,7 +243,7 @@ ul {
           position: absolute;
           top: 4px;
           left: 4px;
-          background-color: #000;
+          background-color: #fff;
           opacity: 0;
           will-change: transform;
           transform: scale(0.5);

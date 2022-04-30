@@ -8,6 +8,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { globalCookiesConfig, useCookies } from 'vue3-cookies'
 import axios from 'axios'
+import 'simplebar/dist/simplebar.min.css'
 
 const { cookies } = useCookies()
 let userCookie = cookies.get('user')
@@ -26,22 +27,23 @@ globalCookiesConfig({
 
 const app = createApp(App)
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes,
 })
 
-router.beforeEach(async (to, from) => {
-  if (
-    // make sure the user is authenticated
-    !userCookie &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== 'login'
-  ) {
-    // redirect the user to the login page
-    return { name: 'login' }
-  }
-})
+// router.beforeEach(async (to, from) => {
+//   console.log(to)
+//   if (
+//     // make sure the user is authenticated
+//     !userCookie &&
+//     // ❗️ Avoid an infinite redirect
+//     to.name === 'create'
+//   ) {
+//     // redirect the user to the login page
+//     return { name: 'login' }
+//   }
+// })
 
 app.use(router)
 app.use(store)

@@ -9,9 +9,12 @@
   "dependencies": {
     "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
+    "daisyui": "^2.14.2",
     "gsap": "^3.10.2",
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
+    "simplebar": "^5.3.6",
+    "simplebar-vue3": "^0.1.5",
     "sweetalert2": "^11.4.8",
     "vue": "^3.2.31",
     "vue-cookie": "^1.1.4",
