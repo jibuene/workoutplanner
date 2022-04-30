@@ -13,7 +13,7 @@ import 'simplebar/dist/simplebar.min.css'
 const { cookies } = useCookies()
 let userCookie = cookies.get('user')
 if (userCookie) {
-  const userIsValid = await axios.post('http://localhost:3000/verify-token', userCookie)
+  const userIsValid = axios.post('http://localhost:3000/verify-token', userCookie)
   if (userIsValid.data.message !== 'Errytinn OKI') {
     userCookie = null
   }

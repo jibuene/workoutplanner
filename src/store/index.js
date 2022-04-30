@@ -7,7 +7,7 @@ import { router } from "../main.js"
 
 
 const { cookies } = useCookies()
-const API_URL = 'http://192.168.0.15:3000/'
+const API_URL = 'http://81.95.11.94:3000/'
 export default createStore({
   state: {
     workoutPlans: [],
