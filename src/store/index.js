@@ -10,6 +10,10 @@ const API = axios.create({
   baseURL: 'http://81.95.11.94:3000/',
   withCredentials: true
 })
+// const API = axios.create({
+//   baseURL: 'http://localhost:3000/',
+//   withCredentials: true
+// })
 
 export default createStore({
   state: {
