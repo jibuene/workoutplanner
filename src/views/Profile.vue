@@ -61,20 +61,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
-/*
-{
-  "_id": "624fda40aeebf2dbe32573ef", 
-  "name": "Gro program",
-  "comment": "loltest", 
-  "workout": [ 
-    { "name": "Adductor", "reps": 1, "sets": 1 },
-    { "name": "Air Bike", "reps": 1, "sets": 1 } 
-  ], 
-  "creator": "JIB", 
-  "tags": "test"
-}
 
-*/
 export default {
   name: 'Browse',
   data () {
@@ -108,7 +95,6 @@ export default {
     ])
   },
   async mounted() {
-    await this.getUserCookie()
     await this.getSavedWorkouts(this.loggedInUser)
     await this.getCompletedWorkouts(this.loggedInUser)
     await this.getCreatedWorkouts(this.loggedInUser)

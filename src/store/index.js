@@ -5,9 +5,12 @@ import Swal from 'sweetalert2'
 import { useCookies } from 'vue3-cookies'
 import { router } from "../main.js"
 
-
 const { cookies } = useCookies()
-const API_URL = 'http://81.95.11.94:3000/'
+const API = axios.create({
+  baseURL: 'http://81.95.11.94:3000/',
+  withCredentials: true
+})
+
 export default createStore({
   state: {
     workoutPlans: [],
@@ -19,13 +22,18 @@ export default createStore({
     userCreatedWorkouts: []
   },
   actions: {
+    async testLol ({ state }) {
+      const lol = await API.post(`cookies`, {withCredentials: true})
+  
+      console.log(lol)
+    },
     async getWorkouts ({ state, commit }) {
-      const data = await axios.get(`${API_URL}get-all-workouts`)
+      const data = await API.get(`get-all-workouts`)
       commit('setWorkoutPlans', data.data)
     },
     async saveWorkout ({ state }, data) {
       data.creator = state.user.username
-      await axios.post(`${API_URL}insert`, { data })
+      await API.post(`insert`, { data })
       return Swal.fire({
         icon: 'success',
         title: 'Saved workout!'
@@ -33,39 +41,55 @@ export default createStore({
     },
     async createUser ({ state }, user) {
       user.password = (bcrypt.hashSync(user.password, bcrypt.genSaltSync()))
-      await axios.post(`${API_URL}create-user`, user)
+      await API.post(`create-user`, user)
     },
-    async findUserData ({ state }, username) {
-      return axios.post(`${API_URL}get-user`, { username: username })
-    },
-    async authUser ({ state }, user) {
-      return axios.post(`${API_URL}auth-user`, user)
+    // async findUserData ({ state }, username) {
+    //   return API.post(`get-user`, { username: username })
+    // },
+    async authUser ({ state }, user = null) {
+      const request = await API.post(`auth-user`, user)
+      if (request.status === 200) {
+        state.user = request.data.username
+        return 'ok'
+      } else {
+        return new Error('Could not auth')
+      }
     },
     async getWorkoutById ({ state }, id) {
-      const result = await axios.post(`${API_URL}get-workout-by-id`, { id: id })
+      const result = await API.post(`get-workout-by-id`, { id: id })
       state.workout = result.data
     },
     async getSavedWorkouts ({ state }, user) {
-      const workouts = await axios.post(`${API_URL}get-saved-workouts`, { username: user.username })
+      const workouts = await API.post('/auth/get-saved-workouts')
       state.userSavedWorkouts = workouts.data
     },
     async getCreatedWorkouts ({ state }, user) {
-      const workouts = await axios.post(`${API_URL}get-created-workouts`, { username: user.username })
+      const workouts = await API.post('/auth/get-created-workouts')
       state.userCreatedWorkouts = workouts.data
     },
-    // async favoriteWorkout ({ state }, data) {
-    //   const workouts = await axios.post(`${API_URL}favorite-workouts`, { username: data.username, program: data.program })
-    // },
+    async favoriteWorkout ({ state }, data) {
+      return await API.post('/auth/favorite-workouts', { program: data.program })
+    },
     async getCompletedWorkouts ({ state }, data) {
-      const workouts = await axios.post(`${API_URL}get-completed-workouts`, { username: data.username })
+      const workouts = await API.post('/auth/get-completed-workouts')
       state.completedWorkouts = workouts.data
     },
     async saveCompletedWorkout ({ state }, data) {
-      await axios.post(`${API_URL}save-completed-workout`, { username: data.username, data: data })
+      await API.post('auth/save-completed-workout', { data: data })
       return Swal.fire({
         icon: 'success',
         title: 'Saved workout!'
       })
+    },
+    async logoff ({ state, dispatch }) {
+      await API.post('logoff')
+      await Swal.fire({
+        icon: 'success',
+        title: 'You have been logged out!',
+        timer: 1500
+      })
+      state.user = ''
+      return router.push('/')
     },
     async getUserCookie ({ state }) {
       const user = cookies.get('user')
@@ -73,7 +97,7 @@ export default createStore({
         state.user = null
         return
       }
-      const userIsValid = await axios.post(`${API_URL}verify-token`, user)
+      const userIsValid = await API.post(`verify-token`, user)
       if (userIsValid.data.message !== 'Errytinn OKI') {
         return console.log('Token not valid')
       }
@@ -93,12 +117,9 @@ export default createStore({
           title: 'Wrong password or could not find user'
         })
       }
-  
-      if (login.status === 200) {
-        state.user = login.data.user
-        console.log(login.data.user)
-        state.token = login.data.token
-        cookies.set('user', { token: login.data.token, username: login.data.user.username }, "1h")
+      console.log(login)
+      if (login === 'ok') {
+        state.user = data.username
         await Swal.fire({
           icon: 'success',
           title: 'You have been logged in',

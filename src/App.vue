@@ -22,9 +22,14 @@
                 <li>
                   <router-link to="/Browse" @click="hiddenMenu = false" class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0" aria-current="page">Browse</router-link>
                 </li>
-                <li v-if="loggedInUser?.username?.length > 0">
-                  <router-link @click="hiddenMenu = false" to="/Profile" class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0" aria-current="page">Profile</router-link>
-                </li>
+                <template v-if="loggedInUser?.username?.length > 0">
+                  <li>
+                    <router-link @click="hiddenMenu = false" to="/Profile" class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0" aria-current="page">Profile</router-link>
+                  </li>
+                  <li>
+                    <button @click="logoff()" class="block mt-1 py-2 pl-3 rounded md:bg-transparent md:text-red-700 md:p-0">Log out</button>
+                  </li>
+                </template>
                 <li v-else>
                   <router-link
                     @click="hiddenMenu = false"
@@ -75,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserCookie']),
+    ...mapActions(['getUserCookie', 'authUser', 'logoff']),
     isMobile() {
       if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true
@@ -85,7 +90,7 @@ export default {
     }
   },
   mounted () {
-    this.getUserCookie()
+    this.authUser()
   }
 }
 </script>

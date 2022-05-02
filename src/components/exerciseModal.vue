@@ -43,7 +43,7 @@
 								</div>
 							</template>
 							<img
-								:src="`../../public/exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/0.jpg`"
+								:src="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/0.jpg`"
 								class="p-1 border border-base-300 rounded"
 								alt="No image available"
 							/>

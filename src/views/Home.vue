@@ -4,7 +4,6 @@
       <h1>WORKOUT PLANNER 3002</h1>
       <p>Your one stop shop for workout programs.</p>
     </article>
-
     <div class="lg:flex sm:flex justify-between py-16">
       <router-link
         to="/create"
