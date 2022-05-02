@@ -22,7 +22,7 @@
       Save workout
     </button>
   </div>
-  <div class="lg:flex lg:justify-between" v-if="exercises.length > 0">
+  <div class="lg:flex lg:justify-between max-w-screen-l" v-if="exercises.length > 0">
     <!-- <div>
       Current Filter:
       <li v-for="(filter, idx) in workoutFilter.filter(x => x !== null)" :key="idx">{{ filter }}</li>
@@ -52,8 +52,11 @@
     Results: {{ filterJson.length }}
 
     </div>
-    <div class="grid grid-cols-2 lg:grid-cols-3 gap-1 justify-evenly text-center p-5 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-1 justify-evenly text-center p-5 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5" v-if="filterJson.length > 0">
       <div v-for="(exercise, idx) in filterJson" :key="idx" class="bg-base-300 md:h-12 h-24 rounded-lg justify-center" @click="selectedExercise = exercise, showExerciseModal=true">{{ exercise.name }}</div>
+    </div>
+    <div class="flex justify-start" v-else>
+      <div class="text-2xl">No results</div>
     </div>
     <exerciseModal v-if="showExerciseModal" :exercise="selectedExercise" @addToWorkout="addToWorkout" @cancel="showExerciseModal = false" />
     <saveWorkoutModal v-if="showSaveWorkoutModal" :workout="workoutProgram" @close="showSaveWorkoutModal = false"/>
@@ -145,6 +148,9 @@ export default {
       if (this.workoutTextFilter.length > 0) {
         const rgxp = new RegExp(`${this.workoutTextFilter.toLowerCase()}*`, 'g')
         newArr = newArr.filter(x => x.name.toLowerCase().match(rgxp))
+      }
+      if (newArr.length === 0) {
+        return []
       }
       Object.keys(newArr[0]).map((object, idx) => {
         if (this.workoutFilter[idx]?.length > 0) {
