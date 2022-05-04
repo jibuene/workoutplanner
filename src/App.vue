@@ -42,21 +42,8 @@
             </div>
         </div>
       </div>
-      <!-- <div>
-        <h1
-          v-if="loggedInUser?.username?.length > 0"
-          class="text-3xl italic float-right font-normal hidden md:flex">
-          WELCOME {{ loggedInUser?.username }}
-        </h1>
-        <router-link
-          to="/Login"
-          v-else
-          class="text-3xl italic float-right font-normal hidden md:flex">
-          Login
-        </router-link>
-      </div> -->
     </header>
-    <main class="bg-base-300 h-screen mx-auto px-4 py-12 sm:px-6 lg:py-16 lg:px-8">
+    <main class="bg-base-300 mx-auto px-4 py-4 px-6">
       <router-view />
     </main>
   </div>
@@ -80,7 +67,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getUserCookie', 'authUser', 'logoff']),
+    ...mapActions(['logoff']),
     isMobile() {
       if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true
@@ -89,8 +76,5 @@ export default {
       }
     }
   },
-  mounted () {
-    this.authUser()
-  }
 }
 </script>

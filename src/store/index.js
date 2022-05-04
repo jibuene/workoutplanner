@@ -2,10 +2,8 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
 import Swal from 'sweetalert2'
-import { useCookies } from 'vue3-cookies'
 import { router } from "../main.js"
 
-const { cookies } = useCookies()
 const API = axios.create({
   baseURL: 'http://81.95.11.94:3000/',
   withCredentials: true
@@ -19,7 +17,7 @@ export default createStore({
   state: {
     workoutPlans: [],
     user: [],
-    userSavedWorkouts: [],
+    userFavoriteWorkouts: [],
     userToken: '',
     workout: [],
     completedWorkouts: [],
@@ -31,9 +29,9 @@ export default createStore({
   
       console.log(lol)
     },
-    async getWorkouts ({ state, commit }) {
+    async getWorkouts ({ state }) {
       const data = await API.get(`get-all-workouts`)
-      commit('setWorkoutPlans', data.data)
+      state.workoutPlans = data.data
     },
     async saveWorkout ({ state }, data) {
       data.creator = state.user.username
@@ -60,23 +58,29 @@ export default createStore({
       }
     },
     async getWorkoutById ({ state }, id) {
-      const result = await API.post(`get-workout-by-id`, { id: id })
+      const result = await API.post('get-workout-by-id', { id: id })
       state.workout = result.data
     },
-    async getSavedWorkouts ({ state }, user) {
-      const workouts = await API.post('/auth/get-saved-workouts')
-      state.userSavedWorkouts = workouts.data
+    async getFavoriteWorkouts ({ state }) {
+      const workouts = await API.post('/auth/get-favorite-workouts')
+      state.userFavoriteWorkouts = workouts.data
     },
     async getCreatedWorkouts ({ state }, user) {
       const workouts = await API.post('/auth/get-created-workouts')
       state.userCreatedWorkouts = workouts.data
     },
-    async favoriteWorkout ({ state }, data) {
-      return await API.post('/auth/favorite-workouts', { program: data.program })
-    },
     async getCompletedWorkouts ({ state }, data) {
       const workouts = await API.post('/auth/get-completed-workouts')
       state.completedWorkouts = workouts.data
+    },
+    async setFavoriteWorkout ({ state, dispatch }, data) {
+      await API.post('/auth/favorite-workouts', { program: data.program })
+      Swal.fire({
+        icon: 'success',
+        title: 'Workout has been favorited!',
+        timer: 1500
+      })
+      dispatch('getFavoriteWorkouts')
     },
     async saveCompletedWorkout ({ state }, data) {
       await API.post('auth/save-completed-workout', { data: data })
@@ -84,6 +88,21 @@ export default createStore({
         icon: 'success',
         title: 'Saved workout!'
       })
+    },
+    async removeFavoriteWorkout ({ state, dispatch }, program) {
+      const result = await Swal.fire({
+        title: 'Do you want to remove this program from favorites?',  
+        showDenyButton: true, 
+        confirmButtonText: 'Yes',  
+        denyButtonText: 'No',
+      })
+      if (result.isConfirmed) {
+        await API.post('/auth/remove-favorite-workout', { program: program })
+        Swal.fire('Removed!', '', 'success')
+      } else {
+        Swal.fire('Changes are not saved', '', 'info')
+     }
+     dispatch('getFavoriteWorkouts')
     },
     async logoff ({ state, dispatch }) {
       await API.post('logoff')
@@ -94,21 +113,6 @@ export default createStore({
       })
       state.user = ''
       return router.push('/')
-    },
-    async getUserCookie ({ state }) {
-      const user = cookies.get('user')
-      if (!user) {
-        state.user = null
-        return
-      }
-      const userIsValid = await API.post(`verify-token`, user)
-      if (userIsValid.data.message !== 'Errytinn OKI') {
-        return console.log('Token not valid')
-      }
-      
-      if (user) {
-        state.user = user
-      }
     },
     async loginUser ({ state, dispatch }, data) {
       let login
@@ -121,14 +125,14 @@ export default createStore({
           title: 'Wrong password or could not find user'
         })
       }
-      console.log(login)
       if (login === 'ok') {
         state.user = data.username
         await Swal.fire({
           icon: 'success',
           title: 'You have been logged in',
-          showConfirmButton: false,
-          timer: 1500
+          toast: true,
+          timer: 2000,
+          showConfirmButton: false
         })
         if (data.routerHist !== null) {
           router.push(data.routerHist)
@@ -139,14 +143,9 @@ export default createStore({
   getters: {
     workoutPlans: (state) => state.workoutPlans,
     loggedInUser: (state) => state.user,
-    userSavedWorkouts: (state) => state.userSavedWorkouts,
+    userFavoriteWorkouts: (state) => state.userFavoriteWorkouts,
     workout: (state) => state.workout,
     completedWorkouts: (state) => state.completedWorkouts,
     userCreatedWorkouts: (state) => state.userCreatedWorkouts
-  },
-  mutations: {
-    setWorkoutPlans (state, data) {
-      state.workoutPlans = data
-    }
   }
 })

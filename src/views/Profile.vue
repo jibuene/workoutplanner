@@ -23,7 +23,7 @@
   <div class="my-5">
     <h1 class="text-3xl font-bold">Favorites ⭐</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
-      <div v-for="(plan, idx) in userSavedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+      <div v-for="(plan, idx) in userFavoriteWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
         <div class="card-body p-3 md:p-6">
           <div class="card-title">{{ plan.name }}</div>
           <p class="text-sm">{{ plan.comment }}</p>
@@ -76,8 +76,7 @@ export default {
     ...mapActions([
       'createUser',
       'loginUser',
-      'getSavedWorkouts',
-      'getUserCookie',
+      'getFavoriteWorkouts',
       'getCompletedWorkouts',
       'getCreatedWorkouts'
     ]),
@@ -89,13 +88,13 @@ export default {
     ...mapGetters([
       'workoutPlans',
       'loggedInUser',
-      'userSavedWorkouts',
+      'userFavoriteWorkouts',
       'completedWorkouts',
       'userCreatedWorkouts'
     ])
   },
   async mounted() {
-    await this.getSavedWorkouts(this.loggedInUser)
+    await this.getFavoriteWorkouts()
     await this.getCompletedWorkouts(this.loggedInUser)
     await this.getCreatedWorkouts(this.loggedInUser)
   }

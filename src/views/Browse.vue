@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="form-control md:mb- text-center bg-base-100 p-2 rounded mb-2">
