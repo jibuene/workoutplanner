@@ -1,0 +1,18 @@
+Create.vue:
+Add filter viewer (clear filter when pressed)
+Public/Private (with description)
+
+
+Showworkout.vue:
+Title and description more different
+Blackbox on checkbox on animation
+Workoutcomment : private workoutcomment?
+
+
+ETC:
+Rating of programs
+See how many who have favorited workout
+
+
+Future:
+comment section
