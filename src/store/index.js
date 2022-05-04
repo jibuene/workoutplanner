@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { router } from "../main.js"
 
 const API = axios.create({
-  baseURL: 'http://81.95.11.94:3000/',
+  baseURL: 'http://www.gym.zone:3000/',
   withCredentials: true
 })
 // const API = axios.create({
