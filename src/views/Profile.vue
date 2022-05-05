@@ -53,7 +53,7 @@
           </div>
         </div>
         <label class="label p-3 md:p-6">
-        <div class="rating ml-2 mt-5" v-if="userRatings.find(x => x.program === plan._id)" >
+        <div class="rating ml-2 mt-5" v-if="userRatings && userRatings.find(x => x.program === plan._id)" >
           <input
             v-on:click.stop
             @change="setRating({ rating: key, program: plan._id })"

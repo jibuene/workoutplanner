@@ -15,7 +15,7 @@
               <span class="text-gray-500">Creator: {{ workout.creator }}</span>
             </div>
             <div class="card-actions justify-between">
-              <div class="rating ml-2 mt-5" v-if="userRatings.find(x => x.program === workoutId)">
+              <div class="rating ml-2 mt-5" v-if="userRatings && userRatings.find(x => x.program === workoutId)">
                 <input
                   @change="setRating({ rating: key, program: workoutId })"
                   :disabled="loggedInUser.length === 0"
