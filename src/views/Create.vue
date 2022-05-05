@@ -1,5 +1,5 @@
 <template>
-<div class="max-w-screen-2xl">
+<div class="">
   <div v-if="workoutProgram.workout.length > 0">
     Current workout program
     <table class="table table-compact w-full">
@@ -52,8 +52,8 @@
     Results: {{ filterJson.length }}
 
     </div>
-    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 justify-evenly text-center p-2 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5" v-if="filterJson.length > 0">
-      <div v-for="(exercise, idx) in filterJson" :key="idx" class="card bg-base-100 shadow-xl image-full z-0" @click="selectedExercise = exercise, showExerciseModal=true">
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1 justify-evenly text-center p-2 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5" v-if="filterJson.length > 0">
+      <div v-for="(exercise, idx) in filterJson" :key="idx" class="card bg-base-100 shadow-xl rounded-sm image-full z-0" @click="selectedExercise = exercise, showExerciseModal=true">
         <figure>
           <img
             v-lazy="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/1.jpg`"
@@ -182,3 +182,8 @@ export default {
   }
 }
 </script>
+<style>
+.card.image-full:before {
+  border-radius: 1px;
+}
+</style>

@@ -18,7 +18,7 @@
         <button class="btn btn-primary mb-3 md:mb-0 flex w-full md:w-fit" type="button" @click="createUser(user)">
           Create User
         </button>
-        <button class="btn btn-primary mb-3 md:mb-0 flex w-full md:w-fit" type="button" @click="loginUser({ username: user, routerHist: this.$router.options.history.state.back })">
+        <button class="btn btn-primary mb-3 md:mb-0 flex w-full md:w-fit" type="button" @click="loginUser({ user: user, routerHist: this.$router.options.history.state.back })">
           Login
         </button>
         <a class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker flex" href="#">

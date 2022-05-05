@@ -14,9 +14,32 @@
             <div class="card-actions justify-center">
               <span class="text-gray-500">Creator: {{ workout.creator }}</span>
             </div>
-            <div class="card-actions justify-end">
+            <div class="card-actions justify-between">
+              <div class="rating ml-2 mt-5" v-if="userRatings.find(x => x.program === workoutId)">
+                <input
+                  @change="setRating({ rating: key, program: workoutId })"
+                  :disabled="loggedInUser.length === 0"
+                  :checked="userRatings.find(x => x.program === workoutId).rating === key"
+                  type="radio"
+                  name="rating-2"
+                  class="mask mask-star-2 bg-orange-300 ml-1"
+                  v-for="key in [1, 2, 3, 4, 5]"
+                  :key="key"
+                />
+              </div>
+              <div class="rating ml-2 mt-5" v-else>
+                <input
+                  @change="setRating({ rating: key, program: workoutId })"
+                  :disabled="loggedInUser.length === 0"
+                  type="radio"
+                  name="rating-2"
+                  class="mask mask-star-2 bg-orange-300 ml-1"
+                  v-for="key in [1, 2, 3, 4, 5]"
+                  :key="key"
+                />
+              </div>
               <button
-                class="btn m-2"
+                class="btn btn-accent m-2"
                 @click="setFavoriteWorkout({ program: workoutId, username: loggedInUser.username})"
                 :disabled="loggedInUser.length === 0"
                 v-if="userFavoriteWorkouts.filter(x => x._id === workoutId).length === 0">
@@ -29,8 +52,9 @@
           </div>
         </div>
         <div class="h-full py-8 px-6 space-y-6 rounded bg-base-200">
-          <label for="workoutComment" class="form-label inline-block mb-2 flex justify-center">
-            <h5 class="text-xl card-title">Workout comment</h5>
+          <label for="workoutComment" class="">
+            <h5 class="text-xl card-title">Personal workout comment</h5>
+            <p class="text-sm text-gray-500">This can only be seen by you</p>
           </label>
           <textarea
             class="textarea w-full bg-base-300"
@@ -107,21 +131,32 @@ export default {
       'saveCompletedWorkout',
       'setFavoriteWorkout',
       'getFavoriteWorkouts',
-      'removeFavoriteWorkout'
+      'removeFavoriteWorkout',
+      'setRating',
+      'getRatings'
     ])
   },
   computed: {
     ...mapGetters([
       'workout',
       'loggedInUser',
-      'userFavoriteWorkouts'
+      'userFavoriteWorkouts',
+      'userRatings'
     ])
   },
   async mounted() {
     await this.getWorkoutById(this.workoutId)
-    if (this.loggedInUser.length > 0) {
+    if (this.loggedInUser.length !== 0) {
       await this.getFavoriteWorkouts()
+      await this.getRatings()
     }
   }
 }
 </script>
+<style>
+
+[type='radio']:checked {
+  background-image: none
+}
+
+</style>

@@ -3,6 +3,7 @@
     <article class="prose">
       <h1>WORKOUT PLANNER 3002</h1>
       <p>Your one stop shop for workout programs.</p>
+      <p>This site is for everyone that wants to create/find/share workout plans.</p>
     </article>
     <div class="lg:flex sm:flex justify-between py-16">
       <router-link
@@ -12,7 +13,7 @@
       </router-link>
       <router-link
         to="/browse"
-        class="btn btn-primary flex">
+        class="btn btn-accent flex">
           Click here to browse workouts
       </router-link>
     </div>

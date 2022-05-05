@@ -4,12 +4,12 @@ import App from './App.vue'
 import { routes } from './routes.js'
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
-import VueSweetalert2 from 'vue-sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 import 'simplebar/dist/simplebar.min.css'
 import VueLazyloadNext from 'vue-lazyload-next'
 import Swal from 'sweetalert2'
-import axios from 'axios'
+import VueCookies from 'vue-cookies'
 
 const app = createApp(App)
 
@@ -47,6 +47,8 @@ app.use(VueLazyloadNext, {
   preLoad: 1.3,
   attempt: 1
 })
+
+app.use(VueCookies)
 app.use(router)
 app.use(store)
 app.use(VueSweetalert2)

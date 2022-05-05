@@ -21,7 +21,8 @@ export default createStore({
     userToken: '',
     workout: [],
     completedWorkouts: [],
-    userCreatedWorkouts: []
+    userCreatedWorkouts: [],
+    userRatings: []
   },
   actions: {
     async testLol ({ state }) {
@@ -41,13 +42,46 @@ export default createStore({
         title: 'Saved workout!'
       })
     },
-    async createUser ({ state }, user) {
-      user.password = (bcrypt.hashSync(user.password, bcrypt.genSaltSync()))
-      await API.post(`create-user`, user)
+    async createUser ({ state, dispatch }, user) {
+      // user.password = (bcrypt.hashSync(user.password, bcrypt.genSaltSync()))
+      const userCreated = await API.post(`create-user`, user)
+      if (userCreated.data === 'Ok') {
+        dispatch('loginUser', { user: user, routerHist: '/' })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Username already exists',
+          toast: true,
+          timer: 2000,
+          showConfirmButton: false
+        })
+      }
     },
-    // async findUserData ({ state }, username) {
-    //   return API.post(`get-user`, { username: username })
-    // },
+    async loginUser ({ state, dispatch }, data) {
+      let login
+      try {
+        login = await dispatch('authUser', data.user)
+      } catch (error) {
+        console.log(error)
+        return Swal.fire({
+          icon: 'error',
+          title: 'Wrong password or could not find user'
+        })
+      }
+      if (login === 'ok') {
+        state.user = data.username
+        await Swal.fire({
+          icon: 'success',
+          title: 'You have been logged in',
+          toast: true,
+          timer: 2000,
+          showConfirmButton: false
+        })
+        if (data.routerHist !== null) {
+          router.push(data.routerHist)
+        }  
+      }
+    },
     async authUser ({ state }, user = null) {
       const request = await API.post(`auth-user`, user)
       if (request.status === 200) {
@@ -72,6 +106,13 @@ export default createStore({
     async getCompletedWorkouts ({ state }, data) {
       const workouts = await API.post('/auth/get-completed-workouts')
       state.completedWorkouts = workouts.data
+    },
+    async setRating ({ state }, data) {
+      await API.post('/auth/set-workout-rating', data)
+    },
+    async getRatings ({ state }) {
+      const result = await API.post('/auth/get-workout-rating')
+      state.userRatings = result.data
     },
     async setFavoriteWorkout ({ state, dispatch }, data) {
       await API.post('/auth/favorite-workouts', { program: data.program })
@@ -113,31 +154,6 @@ export default createStore({
       })
       state.user = ''
       return router.push('/')
-    },
-    async loginUser ({ state, dispatch }, data) {
-      let login
-      try {
-        login = await dispatch('authUser', data.username)
-      } catch (error) {
-        console.log(error)
-        return Swal.fire({
-          icon: 'error',
-          title: 'Wrong password or could not find user'
-        })
-      }
-      if (login === 'ok') {
-        state.user = data.username
-        await Swal.fire({
-          icon: 'success',
-          title: 'You have been logged in',
-          toast: true,
-          timer: 2000,
-          showConfirmButton: false
-        })
-        if (data.routerHist !== null) {
-          router.push(data.routerHist)
-        }  
-      }
     }
   },
   getters: {
@@ -146,6 +162,7 @@ export default createStore({
     userFavoriteWorkouts: (state) => state.userFavoriteWorkouts,
     workout: (state) => state.workout,
     completedWorkouts: (state) => state.completedWorkouts,
-    userCreatedWorkouts: (state) => state.userCreatedWorkouts
+    userCreatedWorkouts: (state) => state.userCreatedWorkouts,
+    userRatings: (state) => state.userRatings
   }
 })

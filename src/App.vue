@@ -1,11 +1,13 @@
 <template>
   <!-- dracula goated -->
-  <div data-theme="dracula">
+  <div :data-theme="theme">
     <header class="navbar bg-base-100" v-if="$route.meta.title">
       <div class="flex-1">
         <div class="relative w-full">
           <h1 class="md:text-3xl font-bold leading-tight">
-            <span class="text-sky-400 font-light italic">ONLY</span> GAINS / {{ $route.meta.title }}
+            <router-link to="/" @click="hiddenMenu = false">
+              <span class="text-sky-400 font-light italic">GYM</span>.ZONE / {{ $route.meta.title }}
+            </router-link>
             <label v-if="isMobile()" data-collapse-toggle="mobile-menu" @click="hiddenMenu = !hiddenMenu" type="button" class="btn btn-circle btn-sm swap swap-rotate float-right" aria-controls="mobile-menu" aria-expanded="false">
               <svg v-if="hiddenMenu" class="fill-current" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/></svg>
               <svg v-if="!hiddenMenu" class="fill-current" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/></svg>
@@ -21,6 +23,14 @@
                 </li>
                 <li>
                   <router-link to="/Browse" @click="hiddenMenu = false" class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0" aria-current="page">Browse</router-link>
+                </li>
+                <li>
+                  <select class="block mt-1 py-2 pl-3 rounded font-normal md:text-sky-500 select select-ghost select-xs w-full pt-0" v-model="theme">
+                    <option value="dracula">Default</option>
+                    <option value="retro">Retro</option>
+                    <option value="lofi">Lofi</option>
+                    <option value="valentine">Valentine</option>
+                  </select>
                 </li>
                 <template v-if="loggedInUser?.username?.length > 0">
                   <li>
@@ -55,7 +65,8 @@ export default {
   name: 'App',
   data () {
     return {
-      hiddenMenu: false
+      hiddenMenu: false,
+      theme: 'dracula'
     }
   },
   computed: {
@@ -76,5 +87,16 @@ export default {
       }
     }
   },
+  watch: {
+    theme () {
+      this.$cookies.set("theme", this.theme)
+    }
+  },
+  mounted () {
+    const cookie = this.$cookies.get('theme')
+    if (cookie) {
+      this.theme = cookie
+    }
+  }
 }
 </script>

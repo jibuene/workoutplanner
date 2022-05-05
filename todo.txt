@@ -6,7 +6,11 @@ Public/Private (with description)
 Showworkout.vue:
 Title and description more different
 Blackbox on checkbox on animation
-Workoutcomment : private workoutcomment?
+✔️ Workoutcomment : private workoutcomment?
+
+Login:
+✔️ Check if username exists
+✔️ Username to lowercase
 
 
 ETC:
