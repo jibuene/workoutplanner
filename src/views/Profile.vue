@@ -89,7 +89,7 @@
         </div>
         <label class="label p-3 md:p-6">
           <p class="label-text-alt truncate">Favorites: {{ plan.favorites }}</p>
-          <p class="label-text-alt truncate ">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
+          <p class="label-text-alt truncate" v-if="plan.tags?.length > 0">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
         </label>
       </div>
     </div>
