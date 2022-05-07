@@ -21,6 +21,9 @@
             <p class="text-xs md:text-sm truncate">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</p>
           </div>
         </div>
+        <div class="ml-3">
+          <rating :id="plan._id" :ignoreClick="true" />
+        </div>
         <label class="label p-3 md:p-6">
           <span class="label-text-alt">Created by: {{ plan.creator }}</span>
           <span class="label-text-alt">Tags: {{ plan.tags }}</span>
@@ -31,6 +34,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import rating from '@/components/rating.vue'
 
 export default {
   name: 'Browse',
@@ -39,9 +43,13 @@ export default {
       workoutFilter: ''
     }
   },
+  components: {
+    rating
+  },
   methods: {
     ...mapActions([
-      'getWorkouts'
+      'getWorkouts',
+      'getRatings'
     ]),
     goToWorkout (id) {
       return this.$router.push({ path: '/workout/' + id })

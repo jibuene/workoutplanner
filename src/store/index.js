@@ -95,6 +95,13 @@ export default createStore({
       const result = await API.post('get-workout-by-id', { id: id })
       state.workout = result.data
     },
+    async getRatings ({ state }, program) {
+      const result = await API.post('/get-workout-rating', { program: program })
+      if (result.data.length === 0) {
+        return 0
+      }
+      return result.data.reduce((a, b) => a + b, 0) / result.data.length
+    },
     async getFavoriteWorkouts ({ state }) {
       const workouts = await API.post('/auth/get-favorite-workouts')
       state.userFavoriteWorkouts = workouts.data
@@ -110,8 +117,8 @@ export default createStore({
     async setRating ({ state }, data) {
       await API.post('/auth/set-workout-rating', data)
     },
-    async getRatings ({ state }) {
-      const result = await API.post('/auth/get-workout-rating')
+    async getUserRatings ({ state }) {
+      const result = await API.post('/auth/get-user-workout-rating')
       state.userRatings = result.data
     },
     async setFavoriteWorkout ({ state, dispatch }, data) {

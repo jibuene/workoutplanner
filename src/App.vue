@@ -1,6 +1,6 @@
 <template>
   <!-- dracula goated -->
-  <div :data-theme="theme">
+  <div :data-theme="theme" class="bg-base-300 h-screen">
     <header class="navbar bg-base-100" v-if="$route.meta.title">
       <div class="flex-1">
         <div class="relative w-full">
@@ -30,6 +30,8 @@
                     <option value="retro">Retro</option>
                     <option value="lofi">Lofi</option>
                     <option value="valentine">Valentine</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="garden">Garden</option>
                   </select>
                 </li>
                 <template v-if="loggedInUser?.username?.length > 0">

@@ -2,21 +2,26 @@ Create.vue:
 Add filter viewer (clear filter when pressed)
 Public/Private (with description)
 
-
 Showworkout.vue:
 Title and description more different
 Blackbox on checkbox on animation
-✔️ Workoutcomment : private workoutcomment?
-
-Login:
-✔️ Check if username exists
-✔️ Username to lowercase
-
 
 ETC:
-Rating of programs
-See how many who have favorited workout
-
+✔️ - semi done - Rating of programs - missing TOTAL rating, personal rating done
+✔️ See how many who have favorited workout
+password reset
+email registration
 
 Future:
 comment section
+mulig meir complete workout logg???
+
+
+✔️ Check if username exists
+✔️ Username to lowercase
+✔️ "This can only be seen by you"
+✔️ "You must be logged in to comment"
+✔️ Favorite knapp ser teit ut mebe gjer den grå og on hover gul
+✔️ favorite stjerna, IKKJE blå
+✔️ Visual aids, sjå at du kan trykke på øvelsar i Showworkout
+✔️ Workoutcomment : private workoutcomment?
