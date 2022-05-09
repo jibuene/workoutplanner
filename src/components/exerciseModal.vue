@@ -67,6 +67,8 @@
 									id="grid-zip"
 									type="number"
 									placeholder="0"
+									min="0"
+									oninput="this.value = Math.abs(this.value)"
 									v-model="sets">
 							</div>
 							<div class="w-full px-3 md:mb- text-center">
@@ -78,6 +80,8 @@
 									id="grid-zip"
 									type="number"
 									placeholder="0"
+									min="0"
+									oninput="this.value = Math.abs(this.value)"
 									v-model="reps">
 							</div>
 						</div>

@@ -44,7 +44,7 @@
         <tbody>
           <tr v-for="(exercise, idx) in completedWorkouts" :key="idx">
             <td>{{ exercise.date.substring(0,10) }}</td>
-            <td>{{ exercise.name }}</td>
+          <td>{{ exercise.name }}</td>
             <td class="whitespace-pre-line">{{ exercise.comment }}</td>
           </tr>
         </tbody>
@@ -67,7 +67,7 @@
         </div>
         <label class="label p-3 md:p-6">
           <p class="label-text-alt truncate">Created by: {{ plan.creator }}</p>
-          <p class="label-text-alt truncate">Tags: {{ plan.tags }}</p>
+          <p class="label-text-alt truncate" v-if="plan.tags?.length > 0">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
         </label>
       </div>
     </div>
@@ -76,7 +76,9 @@
   <div>
     <h1 class="text-3xl font-bold">User created workouts</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
-      <div v-for="(plan, idx) in userCreatedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+      <div v-for="(plan, idx) in userCreatedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded inline-block" @click="goToWorkout(plan._id)">
+          <button class="btn btn-accent w-1/2 btn-sm rounded-none" @click="editWorkout(plan)" v-on:click.stop>Edit</button>
+          <button class="btn btn-error w-1/2 btn-sm rounded-none" @click="deleteWorkout(plan._id)" v-on:click.stop>Delete</button>
         <div class="card-body p-3 md:p-6">
           <div class="card-title">{{ plan.name }}</div>
           <p class="text-sm">{{ plan.comment }}</p>
@@ -123,7 +125,9 @@ export default {
       'getCreatedWorkouts',
       'getUserRatings',
       'setRating',
-      'getRatings'
+      'getRatings',
+      'editWorkout',
+      'deleteWorkout'
     ]),
     goToWorkout (id) {
       return this.$router.push({ path: '/workout/' + id })

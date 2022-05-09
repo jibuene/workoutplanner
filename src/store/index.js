@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { router } from "../main.js"
 
 const API = axios.create({
-  baseURL: 'http://www.gym.zone:3000/',
+  baseURL: 'https://www.gym.zone:3000/',
   withCredentials: true
 })
 // const API = axios.create({
@@ -22,7 +22,8 @@ export default createStore({
     workout: [],
     completedWorkouts: [],
     userCreatedWorkouts: [],
-    userRatings: []
+    userRatings: [],
+    editingWorkout: []
   },
   actions: {
     async testLol ({ state }) {
@@ -36,14 +37,23 @@ export default createStore({
     },
     async saveWorkout ({ state }, data) {
       data.creator = state.user.username
-      await API.post(`insert`, { data })
-      return Swal.fire({
-        icon: 'success',
-        title: 'Saved workout!'
-      })
+      if (state.editingWorkout.name) {
+        data.id = state.editingWorkout._id
+        await API.post('auth/editWorkout', { data })
+        state.editingWorkout = {}
+        return Swal.fire({
+          icon: 'success',
+          title: 'Workout was edited!'
+        })
+      } else {
+        await API.post('auth/insert', { data })
+        return Swal.fire({
+          icon: 'success',
+          title: 'Saved workout!'
+        })
+      }
     },
     async createUser ({ state, dispatch }, user) {
-      // user.password = (bcrypt.hashSync(user.password, bcrypt.genSaltSync()))
       const userCreated = await API.post(`create-user`, user)
       if (userCreated.data === 'Ok') {
         dispatch('loginUser', { user: user, routerHist: '/' })
@@ -89,6 +99,23 @@ export default createStore({
         return 'ok'
       } else {
         return new Error('Could not auth')
+      }
+    },
+    async editWorkout ({ state }, workout) {
+      state.editingWorkout = workout
+      return router.push('/create')
+    },
+    async deleteWorkout ({ state, dispatch }, id) {
+      const result = await Swal.fire({
+        title: 'Do you want to remove this program?',  
+        showDenyButton: true, 
+        confirmButtonText: 'Yes',  
+        denyButtonText: 'No',
+      })
+      if (result.isConfirmed) {
+        await API.post('/auth/remove-workout', { id: id })
+        Swal.fire('Removed!', '', 'success')
+        dispatch('getCreatedWorkouts')
       }
     },
     async getWorkoutById ({ state }, id) {
@@ -170,6 +197,7 @@ export default createStore({
     workout: (state) => state.workout,
     completedWorkouts: (state) => state.completedWorkouts,
     userCreatedWorkouts: (state) => state.userCreatedWorkouts,
-    userRatings: (state) => state.userRatings
+    userRatings: (state) => state.userRatings,
+    editingWorkout: (state) => state.editingWorkout
   }
 })

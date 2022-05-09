@@ -1,6 +1,12 @@
 <template>
 <div class="">
-  <div v-if="workoutProgram.workout.length > 0">
+  <div class="alert alert-info shadow-lg mb-5" v-if="editingWorkout.name">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span>Editing workoutplan: {{ editingWorkout.name }}</span>
+    </div>
+  </div>
+  <div v-if="workoutProgram.workout.length > 0" class="overflow-x-auto">
     Current workout program
     <table class="table table-compact w-full">
       <thead>
@@ -8,13 +14,29 @@
           <td class="bg-sky-400 text-sky-100 border-sky-700">Exercise</td>
           <th class="bg-sky-400 text-sky-100 border-sky-700">Sets</th>
           <th class="bg-sky-400 text-sky-100 border-sky-700">Reps</th>
+          <th class="bg-sky-400 text-sky-100 border-sky-700">Description</th>
+          <th class="bg-sky-400 text-sky-100 border-sky-700"></th>
         </tr>
       </thead> 
       <tbody>
         <tr v-for="(exercise, idx) in workoutProgram.workout.filter(x => x !== null)" :key="idx">
           <td>{{ exercise.name }}</td>
-          <td>{{ exercise.sets }}</td>
-          <td>{{ exercise.reps }}</td>
+          <td><input class="input input-bordered" v-model="exercise.sets"></td>
+          <td><input class="input input-bordered" v-model="exercise.reps"></td>
+          <td class="cursor-pointer">
+            <label :for="idx" class="btn modal-button">📝</label>
+            <input type="checkbox" :id="idx" class="modal-toggle" />
+            <div class="modal">
+              <div class="modal-box">
+                <h3 class="font-bold text-lg">Editing instrucitons</h3>
+                <textarea class="textarea textarea-bordered w-full" rows="8" v-model="exercise.customInstructions"></textarea>
+                <div class="modal-action">
+                  <label :for="idx" class="btn">Yay!</label>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td @click="removeExercise(idx)" class="cursor-pointer">🗑️</td>
         </tr>
       </tbody>
     </table>
@@ -72,7 +94,7 @@
       <div class="text-2xl">No results</div>
     </div>
     <exerciseModal v-if="showExerciseModal" :exercise="selectedExercise" @addToWorkout="addToWorkout" @cancel="showExerciseModal = false" />
-    <saveWorkoutModal v-if="showSaveWorkoutModal" :workout="workoutProgram" @close="showSaveWorkoutModal = false"/>
+    <saveWorkoutModal v-if="showSaveWorkoutModal" :workout="workoutProgram" @close="showSaveWorkoutModal = false" @reset="resetData()" :editingWorkout="editingWorkout._id"/>
   </div>
 </div>
 </template>
@@ -99,12 +121,13 @@
     // },
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import json from '../../public/exercises.json'
 import exerciseFilter from '@/components/exerciseFilter.vue'
 import exerciseModal from '@/components/exerciseModal.vue'
 import saveWorkoutModal from '@/components/saveWorkoutModal.vue'
 import programViewer from '@/components/programViewer.vue'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'Create',
@@ -117,7 +140,6 @@ export default {
   data () {
     return {
       exercises: [],
-      level: 'dx',
       workoutFilter: [],
       workoutTextFilter: [],
       showExerciseModal: false,
@@ -135,6 +157,26 @@ export default {
     ...mapActions([
       'saveWorkout'
     ]),
+    async resetData () {
+      this.workoutProgram = {
+        name: '',
+        comment: '',
+        workout: [],
+        creator: ''
+      },
+      this.showSaveWorkoutModal = false
+    },
+    async removeExercise (idx) {
+      const result = await Swal.fire({
+        title: 'Do you want to remove this exercise from the program?',  
+        showDenyButton: true, 
+        confirmButtonText: 'Yes',  
+        denyButtonText: 'No',
+      })
+      if (result.isConfirmed) {
+        this.workoutProgram.workout.splice(idx, idx + 1)
+      }
+    },
     async getExercises () {
       this.exercises = json.exercises
     },
@@ -156,6 +198,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['editingWorkout']),
     filterJson () {
       let newArr = this.exercises
       if (this.workoutTextFilter.length > 0) {
@@ -179,6 +222,13 @@ export default {
   },
   mounted () {
     this.getExercises()
+    console.log(this.editingWorkout.workout)
+    if (this.editingWorkout.workout) {
+      this.workoutProgram.workout = this.editingWorkout.workout
+      this.workoutProgram.name = this.editingWorkout.name
+      this.workoutProgram.comment = this.editingWorkout.comment
+      
+    }
   }
 }
 </script>

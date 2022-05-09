@@ -1,3 +1,6 @@
+1. Edit created workouts
+2. Ikkje skrive -10 reps på craete
+
 Create.vue:
 Add filter viewer (clear filter when pressed)
 Public/Private (with description)
@@ -8,7 +11,6 @@ Blackbox on checkbox on animation
 
 ETC:
 ✔️ - semi done - Rating of programs - missing TOTAL rating, personal rating done
-✔️ See how many who have favorited workout
 password reset
 email registration
 
@@ -16,7 +18,7 @@ Future:
 comment section
 mulig meir complete workout logg???
 
-
+✔️ See how many who have favorited workout
 ✔️ Check if username exists
 ✔️ Username to lowercase
 ✔️ "This can only be seen by you"

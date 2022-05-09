@@ -26,7 +26,7 @@
         </div>
         <label class="label p-3 md:p-6">
           <span class="label-text-alt">Created by: {{ plan.creator }}</span>
-          <span class="label-text-alt">Tags: {{ plan.tags }}</span>
+          <p class="label-text-alt truncate" v-if="plan.tags?.length > 0">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
         </label>
       </div>
     </div>
