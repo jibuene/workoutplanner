@@ -53,8 +53,45 @@ export default createStore({
         })
       }
     },
+    async resetPassword ({ state }, data) {
+      if (data.password === '') {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Please enter a valid password'
+        })
+      }
+      const response = await API.post('resetpassword', { id: data.id, password: 'xxx' })
+      if (response.data === 'No valid token found') {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Your password reset has expired'
+        })
+      } else {
+        return Swal.fire({
+          icon: 'success',
+          title: 'Your password have been reset'
+        })
+      }
+    },
+    async forgotPassword ({ state }) {
+      const input = await Swal.fire({
+        title: 'Submit your GYM.ZONE username',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Reset'
+      })
+      if (input.value) {
+        await API.post('forgot-password', { username: input.value })
+        Swal.fire({
+          title: 'Email has been sent to this user'
+        })
+      }
+    },
     async createUser ({ state, dispatch }, user) {
-      const userCreated = await API.post(`create-user`, user)
+      const userCreated = await API.post('create-user', user)
       if (userCreated.data === 'Ok') {
         dispatch('loginUser', { user: user, routerHist: '/' })
       } else {

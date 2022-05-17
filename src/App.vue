@@ -32,6 +32,8 @@
                     <option value="valentine">Valentine</option>
                     <option value="coffee">Coffee</option>
                     <option value="garden">Garden</option>
+                    <option value="teddy">Teddy</option>
+                    <option value="icecream">Ice Cream</option>
                   </select>
                 </li>
                 <template v-if="loggedInUser?.username?.length > 0">
@@ -42,14 +44,24 @@
                     <button @click="logoff()" class="block mt-1 py-2 pl-3 rounded md:bg-transparent md:text-red-700 md:p-0">Log out</button>
                   </li>
                 </template>
-                <li v-else>
-                  <router-link
-                    @click="hiddenMenu = false"
-                    to="/Login"
-                    class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0">
-                    Login
-                  </router-link>
-                </li>
+                <template v-else>
+                  <li >
+                    <router-link
+                      @click="hiddenMenu = false"
+                      to="/Login"
+                      class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0">
+                      Login
+                    </router-link>
+                  </li>
+                  <li >
+                    <router-link
+                      @click="hiddenMenu = false"
+                      to="/CreateUser"
+                      class="block mt-1 py-2 pl-3 bg-base-300 rounded md:bg-transparent md:text-sky-500 md:p-0">
+                      Create user
+                    </router-link>
+                  </li>
+                </template>
               </ul>
             </div>
         </div>

@@ -31,7 +31,7 @@
                 <h3 class="font-bold text-lg">Editing instrucitons</h3>
                 <textarea class="textarea textarea-bordered w-full" rows="8" v-model="exercise.customInstructions"></textarea>
                 <div class="modal-action">
-                  <label :for="idx" class="btn">Yay!</label>
+                  <label :for="idx" class="btn">Finished</label>
                 </div>
               </div>
             </div>
@@ -71,23 +71,35 @@
         />
       </div>
       <hr />
-    Results: {{ filterJson.length }}
-
+      Results: {{ filterJson.length }}
+      <hr />
+      <div class="p-2 bg-base-300 rounded mt-3">
+        <p>Select page</p>
+        <div class="grid grid-cols-4 gap-1">
+          <button
+            v-for="idx in Math.floor(filteredArrayLength / 100) + 1"
+            :key="idx" class="btn btn-sm"
+            @click="pageSelected = idx - 1"
+            :class="pageSelected === idx - 1 ? 'btn-accent' : ''">
+              {{ idx }}
+            </button>
+        </div>
+      </div>
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1 justify-evenly text-center p-2 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5" v-if="filterJson.length > 0">
       <div v-for="(exercise, idx) in filterJson" :key="idx" class="card bg-base-100 shadow-xl rounded-sm image-full z-0" @click="selectedExercise = exercise, showExerciseModal=true">
-        <figure>
-          <img
-            v-lazy="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/1.jpg`"
-            class=""
-            alt="No image available"
-          />
-        </figure>
-        <div class="card-body">
-          <div class="card-title">
-            {{ exercise.name }}
+          <figure>
+            <img
+              v-lazy="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/1.jpg`"
+              class=""
+              alt="No image available"
+            />
+          </figure>
+          <div class="card-body">
+            <div class="card-title">
+              {{ exercise.name }}
+            </div>
           </div>
-        </div>
       </div>
     </div>
     <div class="flex justify-start" v-else>
@@ -98,27 +110,6 @@
   </div>
 </div>
 </template>
-
-    // EXAMPLE DATASET
-    // {
-    //   "name": "3/4 Sit-Up",
-    //   "force": "pull",
-    //   "level": "beginner",
-    //   "mechanic": "compound",
-    //   "equipment": "body only",
-    //   "primaryMuscles": [
-    //     "abdominals"
-    //   ],
-    //   "secondaryMuscles": [],
-    //   "instructions": [
-    //     "Lie down on the floor and secure your feet. Your legs should be bent at the knees.",
-    //     "Place your hands behind or to the side of your head. You will begin with your back on the ground. This will be your starting position.",
-    //     "Flex your hips and spine to raise your torso toward your knees.",
-    //     "At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going only Â¾ of the way down.",
-    //     "Repeat for the recommended amount of repetitions."
-    //   ],
-    //   "category": "strength"
-    // },
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
@@ -139,6 +130,8 @@ export default {
   },
   data () {
     return {
+      pageSelected: 0,
+      filteredArrayLength: 0,
       exercises: [],
       workoutFilter: [],
       workoutTextFilter: [],
@@ -217,7 +210,9 @@ export default {
           }
         }
       })
-      return newArr
+      this.pageSelected = this.pageSelected * 100 > newArr.length ? 0 : this.pageSelected
+      this.filteredArrayLength = newArr.length
+      return newArr.filter((x, idx) => idx > this.pageSelected * 100 && idx < (this.pageSelected * 100) + 100)
     }
   },
   mounted () {

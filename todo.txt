@@ -1,5 +1,3 @@
-1. Edit created workouts
-2. Ikkje skrive -10 reps på craete
 
 Create.vue:
 Add filter viewer (clear filter when pressed)
@@ -18,6 +16,9 @@ Future:
 comment section
 mulig meir complete workout logg???
 
+✔️ Page selector på  Create.vue
+✔️ Edit created workouts
+✔️ Ikkje skrive -10 reps på craete
 ✔️ See how many who have favorited workout
 ✔️ Check if username exists
 ✔️ Username to lowercase
