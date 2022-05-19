@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { router } from "../main.js"
 
 const API = axios.create({
-  baseURL: 'http://api.gym.zone/',
+  baseURL: 'https://api.gym.zone/',
   withCredentials: true
 })
 // const API = axios.create({
@@ -60,7 +60,7 @@ export default createStore({
           title: 'Please enter a valid password'
         })
       }
-      const response = await API.post('resetpassword', { id: data.id, password: 'xxx' })
+      const response = await API.post('resetpassword', { id: data.id, password: data.password })
       if (response.data === 'No valid token found') {
         return Swal.fire({
           icon: 'error',
@@ -75,7 +75,7 @@ export default createStore({
     },
     async forgotPassword ({ state }) {
       const input = await Swal.fire({
-        title: 'Submit your GYM.ZONE username',
+        title: 'Submit your email',
         input: 'text',
         inputAttributes: {
           autocapitalize: 'off'
@@ -84,7 +84,12 @@ export default createStore({
         confirmButtonText: 'Reset'
       })
       if (input.value) {
-        await API.post('forgot-password', { username: input.value })
+        const result = await API.post('forgot-password', { email: input.value })
+        if (result.data === 'NOK') {
+          return Swal.fire({
+            title: 'Email was not found at GYM.ZONE'
+          })  
+        }
         Swal.fire({
           title: 'Email has been sent to this user'
         })
@@ -95,9 +100,10 @@ export default createStore({
       if (userCreated.data === 'Ok') {
         dispatch('loginUser', { user: user, routerHist: '/' })
       } else {
+        console.log(userCreated)
         return Swal.fire({
           icon: 'error',
-          title: 'Username already exists',
+          title: userCreated.data,
           toast: true,
           timer: 2000,
           showConfirmButton: false
@@ -121,7 +127,7 @@ export default createStore({
           icon: 'success',
           title: 'You have been logged in',
           toast: true,
-          timer: 2000,
+          timer: 1000,
           showConfirmButton: false
         })
         if (data.routerHist !== null) {
@@ -132,6 +138,7 @@ export default createStore({
     async authUser ({ state }, user = null) {
       const request = await API.post(`auth-user`, user)
       if (request.status === 200) {
+        console.log(request.data)
         state.user = request.data.username
         return 'ok'
       } else {
@@ -221,7 +228,7 @@ export default createStore({
       await Swal.fire({
         icon: 'success',
         title: 'You have been logged out!',
-        timer: 1500
+        timer: 1000
       })
       state.user = ''
       return router.push('/')

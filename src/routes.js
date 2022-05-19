@@ -16,7 +16,7 @@ export const routes = [
   { path: '/Createuser', component: Createuser, meta: { title: 'Create User' }, name: 'createuser' },
   { path: '/browse', meta: { title: 'Browse' }, component: Browse },
   { path: '/workout/:id', meta: { title: 'ShowWorkout' }, component: ShowWorkout },
-  { path: '/profile', meta: { title: 'Profile' }, component: Profile },
+  { path: '/profile', meta: { title: 'Profile' }, component: Profile, name: 'profile' },
   { path: '/resetpassword/:id', meta: { title: 'Resetpassword' }, component: Resetpassword },
   { path: '/:path(.*)', component: NotFound },
 ]

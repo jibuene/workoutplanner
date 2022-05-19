@@ -5,17 +5,16 @@ Public/Private (with description)
 
 Showworkout.vue:
 Title and description more different
-Blackbox on checkbox on animation
 
 ETC:
-✔️ - semi done - Rating of programs - missing TOTAL rating, personal rating done
-password reset
-email registration
 
 Future:
 comment section
 mulig meir complete workout logg???
 
+✔️ password reset
+✔️ email registration
+✔️ - semi done - Rating of programs - ????? - missing TOTAL rating, personal rating done  
 ✔️ Page selector på  Create.vue
 ✔️ Edit created workouts
 ✔️ Ikkje skrive -10 reps på craete
