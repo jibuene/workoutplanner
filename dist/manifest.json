@@ -3,17 +3,17 @@
   "name": "Gym.Zone: Gains",
   "icons": [
     {
-      "src": "/images/icons-vector.svg",
+      "src": "favicon.ico",
       "type": "image/svg+xml",
-      "sizes": "512x512"
+      "sizes": "48x48"
     },
     {
-      "src": "/images/icons-192.png",
+      "src": "favicon.ico",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "48x48"
     },
     {
-      "src": "/images/icons-512.png",
+      "src": "/img/icons/android-chrome-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
