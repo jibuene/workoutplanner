@@ -2,7 +2,6 @@
 <template>
 <div>
   <div class="stats shadow mb-4 flex">
-    
     <div class="stat">
       <div class="stat-figure text-primary">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
@@ -15,7 +14,7 @@
       <div class="stat-figure">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
       </div>
-      <div class="stat-title">Overall Rating</div>
+      <div class="stat-title">Average Rating</div>
       <div class="stat-value">{{ totalRating.reduce((a, b) => a + b, 0) / totalRating.length }}</div>
       <div class="stat-desc">Total of your created workouts</div>
     </div>
@@ -62,23 +61,27 @@
             <p class="text-xs md:text-sm truncate">{{ workout.name }} - reps: {{ workout.reps }} - sets: {{ workout.sets }}</p>
           </div>
         </div>
-        <div class="rating ml-2 mt-5" >
-          <rating :id="plan._id" :userRating="this.userRatings" v-on:click.stop />
+        <div class="">
+          <div class="rating ml-2 mt-5" >
+            <rating :id="plan._id" :userRating="this.userRatings" v-on:click.stop />
+          </div>
+          <label class="label p-3 md:p-6 card-actions">
+            <p class="label-text-alt truncate">Created by: {{ plan.creator }}</p>
+            <p class="label-text-alt truncate" v-if="plan.tags?.length > 0">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
+          </label>
         </div>
-        <label class="label p-3 md:p-6">
-          <p class="label-text-alt truncate">Created by: {{ plan.creator }}</p>
-          <p class="label-text-alt truncate" v-if="plan.tags?.length > 0">Tags: <span v-for="(tag, idx) in plan.tags.split(',')" :key="idx" class="badge badge-primary">{{ tag }}</span></p>
-        </label>
       </div>
     </div>
     <p class="leading-none flex justify-evenly">Click on a workout to show it</p>
   </div>
   <div>
-    <h1 class="text-3xl font-bold">User created workouts</h1>
+    <h1 class="text-3xl font-bold">Your created workouts</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
-      <div v-for="(plan, idx) in userCreatedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded inline-block" @click="goToWorkout(plan._id)">
+      <div v-for="(plan, idx) in userCreatedWorkouts" :key="idx" class="card bg-base-100 cursor-pointer pb-4 rounded" @click="goToWorkout(plan._id)">
+        <div>
           <button class="btn btn-accent w-1/2 btn-sm rounded-none" @click="editWorkout(plan)" v-on:click.stop>Edit</button>
           <button class="btn btn-error w-1/2 btn-sm rounded-none" @click="deleteWorkout(plan._id)" v-on:click.stop>Delete</button>
+        </div>
         <div class="card-body p-3 md:p-6">
           <div class="card-title">{{ plan.name }}</div>
           <p class="text-sm">{{ plan.comment }}</p>

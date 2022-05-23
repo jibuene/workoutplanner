@@ -10,6 +10,7 @@ import 'simplebar/dist/simplebar.min.css'
 import VueLazyloadNext from 'vue-lazyload-next'
 import Swal from 'sweetalert2'
 import VueCookies from 'vue-cookies'
+import './registerServiceWorker'
 
 const app = createApp(App)
 
