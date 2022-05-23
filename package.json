@@ -16,7 +16,7 @@
     "sass-loader": "^12.6.0",
     "simplebar": "^5.3.6",
     "simplebar-vue3": "^0.1.5",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "^11.4.15",
     "theme-change": "^2.0.2",
     "vue": "^3.2.31",
     "vue-cookie": "^1.1.4",
