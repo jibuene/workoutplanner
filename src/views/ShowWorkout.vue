@@ -64,7 +64,27 @@
                   <td class="cursor-pointer">{{ exercise.sets }}</td>
                   <td class="cursor-pointer">{{ exercise.reps }}</td>
                   <td v-on:click.stop>
-                    <input class="checkbox checkbox-primary" type="checkbox" name="Completed workout">
+                    <label :for="idx" class="btn modal-button">📝</label>
+                    <input type="checkbox" :id="idx" class="modal-toggle" />
+                    <div class="modal">
+                      <div class="modal-box">
+                        <h3 class="font-bold text-lg">Weight / Sets</h3>
+                        <div v-for="(set, sidx) in workoutLog[idx]" :key="sidx">
+                        <p class="py-2">Set: {{ sidx + 1 }}</p>
+                        <label class="input-group">
+                          <span class="w-1/6">Weight</span>
+                          <input type="number" class="input input-bordered" v-model="set.weight">
+                        </label>
+                        <label class="input-group my-1">
+                          <span class="w-1/6">Reps</span>
+                          <input type="number" class="input input-bordered" v-model="set.reps">
+                        </label>
+                        </div>
+                        <div class="modal-action">
+                          <label :for="idx" class="btn">Finished</label>
+                        </div>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -75,7 +95,7 @@
         <exerciseModal v-if="showExerciseModal" :exercise="selectedExercise" @cancel="showExerciseModal = false" />
         <button
           class="btn mt-3"
-          @click="saveCompletedWorkout({ program: workout.name, date: new Date(), comment: comment, username: loggedInUser.username})"
+          @click="saveCompletedWorkout({ program: workout.name, workoutId: workoutId, date: new Date(), comment: comment, username: loggedInUser.username, workoutLog: workoutLog })"
           :disabled="loggedInUser.length === 0">
           Save completed workout
         </button>
@@ -98,7 +118,8 @@ export default {
       workoutId: this.$route.params.id,
       showExerciseModal: false,
       selectedExercise: [],
-      comment: ''
+      comment: '',
+      workoutLog: []
     }
   },
   components: {
@@ -125,10 +146,17 @@ export default {
     ])
   },
   async mounted() {
+    // {{ [[{ weight: 25.5, reps: 12 }, { weight: 25.5, reps: 12 }, { weight: 0, reps: 0 }],[{ weight: 25.5, reps: 12 }, { weight: 25.5, reps: 12 }, { weight: 0, reps: 0 }]] }}
     await this.getWorkoutById(this.workoutId)
     if (this.loggedInUser.length !== 0) {
       await this.getFavoriteWorkouts()
       await this.getUserRatings()
+      this.workout.workout.map((x, idx) => {
+        this.workoutLog[idx] = [],
+        [...Array(x.sets)].forEach((z, idxx) => {
+          this.workoutLog[idx].push({ weight: 0, reps: x.reps })
+        })
+      })
     }
   }
 }

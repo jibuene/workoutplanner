@@ -6,6 +6,7 @@ import Profile from './views/Profile.vue'
 import ShowWorkout from './views/ShowWorkout.vue'
 import Createuser from './views/CreateUser.vue'
 import Resetpassword from './views/ResetPassword.vue'
+import ShowCompletedWorkout from './views/ShowCompletedWorkout.vue'
 import NotFound from './views/NotFound.vue'
 
 /** @type {import('vue-router').RouterOptions['routes']} */
@@ -15,8 +16,9 @@ export const routes = [
   { path: '/login', component: Login, meta: { title: 'Login' }, name: 'login' },
   { path: '/Createuser', component: Createuser, meta: { title: 'Create User' }, name: 'createuser' },
   { path: '/browse', meta: { title: 'Browse' }, component: Browse },
-  { path: '/workout/:id', meta: { title: 'ShowWorkout' }, component: ShowWorkout },
+  { path: '/workout/:id', meta: { title: 'Show Workout' }, component: ShowWorkout },
   { path: '/profile', meta: { title: 'Profile' }, component: Profile, name: 'profile' },
-  { path: '/resetpassword/:id', meta: { title: 'Resetpassword' }, component: Resetpassword },
+  { path: '/resetpassword/:id', meta: { title: 'Reset Password' }, component: Resetpassword },
+  { path: '/WorkoutLog', meta: { title: 'Workout Log' }, component: ShowCompletedWorkout },
   { path: '/:path(.*)', component: NotFound },
 ]

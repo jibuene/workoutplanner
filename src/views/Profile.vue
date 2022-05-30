@@ -32,7 +32,7 @@
   <div>
     <h1 class="text-3xl font-bold ">Completed workouts</h1>
     <div class="overflow-x-auto">
-      <table class="table table-compact w-full mt-3 ">
+      <table class="table table-compact w-full mt-3 table-zebra">
         <thead>
           <tr>
             <td class="bg-sky-400 text-sky-100 border-sky-700">Date</td>
@@ -41,15 +41,17 @@
           </tr>
         </thead> 
         <tbody>
-          <tr v-for="(exercise, idx) in completedWorkouts" :key="idx">
+          <tr v-for="(exercise, idx) in completedWorkouts" :key="idx" @click="workoutlog = exercise, workoutLogId = exercise.workoutId, showWorkoutLog = true" class="cursor-pointer">
             <td>{{ exercise.date.substring(0,10) }}</td>
-          <td>{{ exercise.name }}</td>
+            <td>{{ exercise.name }}</td>
             <td class="whitespace-pre-line">{{ exercise.comment }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <p class="leading-none flex justify-evenly mt-2">Click on a workout to show weight/reps</p>
   </div>
+  <workoutLog v-if="showWorkoutLog" :workoutLog="workoutlog" @cancel="showWorkoutLog = false" :workoutId="workoutLogId" />
   <div class="my-5">
     <h1 class="text-3xl font-bold">Favorites ⭐</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 justify-evenly py-3">
@@ -82,6 +84,9 @@
           <button class="btn btn-accent w-1/2 btn-sm rounded-none" @click="editWorkout(plan)" v-on:click.stop>Edit</button>
           <button class="btn btn-error w-1/2 btn-sm rounded-none" @click="deleteWorkout(plan._id)" v-on:click.stop>Delete</button>
         </div>
+        <div class="pl-5 pt-2" v-if="plan.private">
+          This program is private
+        </div>
         <div class="card-body p-3 md:p-6">
           <div class="card-title">{{ plan.name }}</div>
           <p class="text-sm">{{ plan.comment }}</p>
@@ -104,6 +109,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import rating from '@/components/rating.vue'
+import workoutLog from '@/components/workoutLog.vue'
 
 export default {
   name: 'Browse',
@@ -113,11 +119,15 @@ export default {
         username: '',
         password: ''
       },
-      totalRating: []
+      totalRating: [],
+      workoutlog: [],
+      showWorkoutLog: false,
+      workoutLogId: 0
     }
   },
   components: {
-    rating
+    rating,
+    workoutLog
   },
   methods: {
     ...mapActions([
@@ -130,7 +140,8 @@ export default {
       'setRating',
       'getRatings',
       'editWorkout',
-      'deleteWorkout'
+      'deleteWorkout',
+      'showCompletedWorkout'
     ]),
     goToWorkout (id) {
       return this.$router.push({ path: '/workout/' + id })

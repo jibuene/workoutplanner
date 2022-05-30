@@ -21,8 +21,8 @@
       <tbody>
         <tr v-for="(exercise, idx) in workoutProgram.workout.filter(x => x !== null)" :key="idx">
           <td>{{ exercise.name }}</td>
-          <td><input class="input input-bordered" v-model="exercise.sets"></td>
-          <td><input class="input input-bordered" v-model="exercise.reps"></td>
+          <td><input class="input input-bordered" type="number" min="0" oninput="this.value = Math.abs(this.value)" v-model="exercise.sets"></td>
+          <td><input class="input input-bordered" type="number" min="0" oninput="this.value = Math.abs(this.value)"  v-model="exercise.reps"></td>
           <td class="cursor-pointer">
             <label :for="idx" class="btn modal-button">📝</label>
             <input type="checkbox" :id="idx" class="modal-toggle" />
@@ -45,10 +45,6 @@
     </button>
   </div>
   <div class="lg:flex lg:justify-between" v-if="exercises.length > 0">
-    <!-- <div>
-      Current Filter:
-      <li v-for="(filter, idx) in workoutFilter.filter(x => x !== null)" :key="idx">{{ filter }}</li>
-    </div> -->
     <div class="p-2 bg-base-100 rounded">
       <div class="text-center">
         <label class="uppercase tracking-wide text-xs font-bold">
@@ -85,6 +81,11 @@
             </button>
         </div>
       </div>
+      <hr />
+      <!-- <div class="p-2 bg-base-300 rounded mt-3">
+        Current Filter: <button @click="workoutFilter = []">Clear Filter</button>
+        <li v-for="(filter, idx) in workoutFilter.filter(x => x !== null && x.length > 0)" :key="idx">{{ filter }}</li>
+      </div> -->
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1 justify-evenly text-center p-2 bg-base-100 lg:ml-5 sm:mt-5 lg:mt-0 mt-5" v-if="filterJson.length > 0">
       <div v-for="(exercise, idx) in filterJson" :key="idx" class="card bg-base-100 shadow-xl rounded-sm image-full z-0" @click="selectedExercise = exercise, showExerciseModal=true">
@@ -217,12 +218,12 @@ export default {
   },
   mounted () {
     this.getExercises()
-    console.log(this.editingWorkout.workout)
     if (this.editingWorkout.workout) {
       this.workoutProgram.workout = this.editingWorkout.workout
       this.workoutProgram.name = this.editingWorkout.name
       this.workoutProgram.comment = this.editingWorkout.comment
-      
+      this.workoutProgram.tags = this.editingWorkout.tags
+      this.workoutProgram.private = this.editingWorkout.private
     }
   }
 }

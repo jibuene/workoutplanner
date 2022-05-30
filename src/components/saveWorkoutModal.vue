@@ -45,6 +45,15 @@
 						</div>
 					</div>
 					<div>
+						<div class="form-control" @click="workout.private = !workout.private">
+							<label class="label cursor-pointer pointer-events-none" >
+								<span class="label-text">Private</span>
+								<input type="checkbox" class="toggle toggle-primary" :checked="workout.private" />
+							</label>
+							<p class="label text-sm text-slate-500 mb-5 text-left">This will hide the program in the "Browse" section.<br /> You can edit this later</p>
+						</div>
+					</div>
+					<div>
 						<button
 							type="button"
 							class="btn btn-accent mr-4"
@@ -73,7 +82,8 @@ import { mapActions } from 'vuex'
 		props: ['workout', 'editingWorkout'],
 		data () {
 			return {
-				sets: 0
+				sets: 0,
+				checked: 0
 			}
 		},
 		methods: {

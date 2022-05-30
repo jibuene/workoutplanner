@@ -1,17 +1,15 @@
-
 Create.vue:
-Add filter viewer (clear filter when pressed)
-Public/Private (with description)
+Add filter viewer (clear filter when pressed) - mabye difficult with my components
 
 Showworkout.vue:
 Title and description more different
-
-ETC:
 
 Future:
 comment section
 mulig meir complete workout logg???
 
+
+✔️ Public/Private (with description)
 ✔️ password reset
 ✔️ email registration
 ✔️ - semi done - Rating of programs - ????? - missing TOTAL rating, personal rating done  

@@ -23,7 +23,8 @@ export default createStore({
     completedWorkouts: [],
     userCreatedWorkouts: [],
     userRatings: [],
-    editingWorkout: []
+    editingWorkout: [],
+    showCompletedWorkout: []
   },
   actions: {
     async testLol ({ state }) {
@@ -138,15 +139,19 @@ export default createStore({
     async authUser ({ state }, user = null) {
       const request = await API.post(`auth-user`, user)
       if (request.status === 200) {
-        console.log(request.data)
         state.user = request.data.username
         return 'ok'
       } else {
         return new Error('Could not auth')
       }
     },
+    async showCompletedWorkout ({ state }, workout) {
+      state.showCompletedWorkout = workout
+      return router.push('/WorkoutLog')
+    },
     async editWorkout ({ state }, workout) {
       state.editingWorkout = workout
+      console.log(workout)
       return router.push('/create')
     },
     async deleteWorkout ({ state, dispatch }, id) {
@@ -165,6 +170,9 @@ export default createStore({
     async getWorkoutById ({ state }, id) {
       const result = await API.post('get-workout-by-id', { id: id })
       state.workout = result.data
+    },
+    async jibDeleteWorkout ({ state }, id) {
+      await API.post('delete-shit', { id: id })
     },
     async getRatings ({ state }, program) {
       const result = await API.post('/get-workout-rating', { program: program })
@@ -242,6 +250,7 @@ export default createStore({
     completedWorkouts: (state) => state.completedWorkouts,
     userCreatedWorkouts: (state) => state.userCreatedWorkouts,
     userRatings: (state) => state.userRatings,
-    editingWorkout: (state) => state.editingWorkout
+    editingWorkout: (state) => state.editingWorkout,
+    showCompletedWorkout: (state) => state.showCompletedWorkout
   }
 })
