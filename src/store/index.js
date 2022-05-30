@@ -28,9 +28,8 @@ export default createStore({
   },
   actions: {
     async testLol ({ state }) {
-      const lol = await API.post(`cookies`, {withCredentials: true})
+      const lol = await API.post(`xdxdxdxd`)
   
-      console.log(lol)
     },
     async getWorkouts ({ state }) {
       const data = await API.get(`get-all-workouts`)

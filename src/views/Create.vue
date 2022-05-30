@@ -197,6 +197,7 @@ export default {
       let newArr = this.exercises
       if (this.workoutTextFilter.length > 0) {
         const rgxp = new RegExp(`${this.workoutTextFilter.toLowerCase()}*`, 'g')
+        console.log(newArr.filter(x => x.name.toLowerCase().match(rgxp)))
         newArr = newArr.filter(x => x.name.toLowerCase().match(rgxp))
       }
       if (newArr.length === 0) {
@@ -213,7 +214,7 @@ export default {
       })
       this.pageSelected = this.pageSelected * 100 > newArr.length ? 0 : this.pageSelected
       this.filteredArrayLength = newArr.length
-      return newArr.filter((x, idx) => idx > this.pageSelected * 100 && idx < (this.pageSelected * 100) + 100)
+      return newArr.filter((x, idx) => idx >= this.pageSelected * 100 && idx < (this.pageSelected * 100) + 100)
     }
   },
   mounted () {

@@ -50,7 +50,7 @@
 								<span class="label-text">Private</span>
 								<input type="checkbox" class="toggle toggle-primary" :checked="workout.private" />
 							</label>
-							<p class="label text-sm text-slate-500 mb-5 text-left">This will hide the program in the "Browse" section.<br /> You can edit this later</p>
+							<p class=" text-sm text-slate-500 mb-5 text-left">This will hide the program from the "Browse" section. <br />You can still share it using the URL<br /> <span class="text-warning">You can edit this later</span></p>
 						</div>
 					</div>
 					<div>

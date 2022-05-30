@@ -1,12 +1,13 @@
 <template>
+  <transition appear name="fade">
   <div class="h-full flex flex-col">
-    <div class="col-span-1 p-3">
+    <div class="col-span-1">
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div class="md:col-span-1 lg:col-span-2" >
           <div class="card bg-base-200 rounded-sm shadow-xl">
             <div class="card-body">
               <h5 class="card-title justify-center">{{ workout.name }}</h5>
-              <p class="flex justify-center">{{ workout.comment }}</p>
+              <p class="flex justify-center whitespace-pre-line lg:whitespace-pre">{{ workout.comment }}</p>
             </div>
             <div class="card-actions justify-center">
               <span class="text-gray-500">Creator: {{ workout.creator }}</span>
@@ -63,7 +64,9 @@
                   <td class="cursor-pointer">{{ exercise.name }}</td>
                   <td class="cursor-pointer">{{ exercise.sets }}</td>
                   <td class="cursor-pointer">{{ exercise.reps }}</td>
-                  <td v-on:click.stop>
+                  <td v-on:click.stop v-if="loggedInUser.length === 0 && idx === 0" class="text-error">Login to enable logging</td>
+                  <td v-on:click.stop v-if="loggedInUser.length === 0 && idx !== 0"></td>
+                  <td v-on:click.stop v-if="loggedInUser.length !== 0">
                     <label :for="idx" class="btn modal-button">📝</label>
                     <input type="checkbox" :id="idx" class="modal-toggle" />
                     <div class="modal">
@@ -71,14 +74,16 @@
                         <h3 class="font-bold text-lg">Weight / Sets</h3>
                         <div v-for="(set, sidx) in workoutLog[idx]" :key="sidx">
                         <p class="py-2">Set: {{ sidx + 1 }}</p>
-                        <label class="input-group">
-                          <span class="w-1/6">Weight</span>
-                          <input type="number" class="input input-bordered" v-model="set.weight">
-                        </label>
-                        <label class="input-group my-1">
-                          <span class="w-1/6">Reps</span>
-                          <input type="number" class="input input-bordered" v-model="set.reps">
-                        </label>
+                        <div class="form-control">
+                          <label class="input-group">
+                            <span class="label-text">Weight</span>
+                            <input type="number" class="input input-bordered" v-model="set.weight">
+                          </label>
+                          <label class="input-group my-1">
+                            <span class="label-text pr-7">Reps</span>
+                            <input type="number" class="input input-bordered" v-model="set.reps">
+                          </label>
+                        </div>
                         </div>
                         <div class="modal-action">
                           <label :for="idx" class="btn">Finished</label>
@@ -105,6 +110,7 @@
       Login to enable all features
     </div>
   </div>
+  </transition>
 </template>
 <script>
 import exerciseModal from '@/components/exerciseModal.vue'
@@ -145,8 +151,7 @@ export default {
       'userRatings'
     ])
   },
-  async mounted() {
-    // {{ [[{ weight: 25.5, reps: 12 }, { weight: 25.5, reps: 12 }, { weight: 0, reps: 0 }],[{ weight: 25.5, reps: 12 }, { weight: 25.5, reps: 12 }, { weight: 0, reps: 0 }]] }}
+  async created() {
     await this.getWorkoutById(this.workoutId)
     if (this.loggedInUser.length !== 0) {
       await this.getFavoriteWorkouts()
@@ -167,6 +172,16 @@ export default {
     color: gold;
     background-color: gold;
     background-image: none;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 1s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
   }
 
 </style>

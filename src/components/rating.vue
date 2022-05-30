@@ -54,7 +54,7 @@ export default {
   },
   watch: {
     userRating () {
-      if (this.userRating.find(x => x.program === this.id)) {
+      if (this.userRating !== '' && this.userRating.find(x => x.program === this.id)) {
         this.rating = this.userRating.find(x => x.program === this.id).rating
       }
     }
