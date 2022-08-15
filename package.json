@@ -13,7 +13,7 @@
     "fetch": "^1.1.0",
     "gsap": "^3.10.2",
     "register-service-worker": "^1.7.2",
-    "sass": "^1.49.9",
+    "sass": "^1.54.4",
     "sass-loader": "^12.6.0",
     "simplebar": "^5.3.6",
     "simplebar-vue3": "^0.1.5",
