@@ -1,9 +1,9 @@
 <template> 
-	<div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+	<div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" @click="this.$emit('cancel')">
 		<div class="flex items-end justify-center pt-4 px-4 pb-20 sm:block sm:p-0">
-			<div class="fixed inset-0 bg-base-100/90 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+			<div class="fixed inset-0 bg-base-100/90 bg-opacity-75 transition-opacity" tabindex="0"  aria-hidden="true"></div>
 			<label for="my-modal-4" class="modal cursor-pointer visible opacity-100 pointer-events-auto">
-				<label class="modal-box" for="">
+				<label class="modal-box" for="" v-on:click.stop>
 					<div class="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
 						<h3 class="text-lg leading-6 font-medium" id="modal-title">{{ exercise.name }}</h3>
 						<div class="mt-2">
@@ -46,6 +46,13 @@
 								:src="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/0.jpg`"
 								class="p-1 border border-base-300 rounded"
 								alt="No image available"
+								:hidden="!swapImage"
+							/>
+							<img
+								:src="`../../exercises/${exercise.name.replaceAll(' ', '_').replaceAll('/', '_')}/images/1.jpg`"
+								class="p-1 border border-base-300 rounded"
+								alt="No image available"
+								:hidden="swapImage"
 							/>
 						</div>
 					</div>
@@ -60,6 +67,8 @@
 									id="grid-zip"
 									type="number"
 									placeholder="0"
+									min="0"
+									oninput="this.value = Math.abs(this.value)"
 									v-model="sets">
 							</div>
 							<div class="w-full px-3 md:mb- text-center">
@@ -71,6 +80,8 @@
 									id="grid-zip"
 									type="number"
 									placeholder="0"
+									min="0"
+									oninput="this.value = Math.abs(this.value)"
 									v-model="reps">
 							</div>
 						</div>
@@ -117,7 +128,8 @@ export default {
 		return {
 			sets: 0,
 			reps: 0,
-			instructions: this.exercise['instructions']?.join(' ') || ''
+			instructions: this.exercise['instructions']?.join(' ') || '',
+			swapImage: true
 		}
 	},
 	computed: {
@@ -132,6 +144,14 @@ export default {
 			}
 			return word.slice(0, 1).toUpperCase() + word.slice(1)
 		}
+	},
+  beforeDestroy() {
+    console.log('Main Vue destroyed')
+  },
+	created () {
+		setInterval(() => {
+			this.swapImage = !this.swapImage
+		}, 1000)
 	}
 }
 </script>

@@ -1,18 +1,27 @@
 Create.vue:
-Add filter viewer (clear filter when pressed)
-Public/Private (with description)
-
+Add filter viewer (clear filter when pressed) - mabye difficult with my components
 
 Showworkout.vue:
 Title and description more different
-Blackbox on checkbox on animation
-Workoutcomment : private workoutcomment?
-
-
-ETC:
-Rating of programs
-See how many who have favorited workout
-
 
 Future:
 comment section
+mulig meir complete workout logg???
+
+
+✔️ Public/Private (with description)
+✔️ password reset
+✔️ email registration
+✔️ - semi done - Rating of programs - ????? - missing TOTAL rating, personal rating done  
+✔️ Page selector på  Create.vue
+✔️ Edit created workouts
+✔️ Ikkje skrive -10 reps på craete
+✔️ See how many who have favorited workout
+✔️ Check if username exists
+✔️ Username to lowercase
+✔️ "This can only be seen by you"
+✔️ "You must be logged in to comment"
+✔️ Favorite knapp ser teit ut mebe gjer den grå og on hover gul
+✔️ favorite stjerna, IKKJE blå
+✔️ Visual aids, sjå at du kan trykke på øvelsar i Showworkout
+✔️ Workoutcomment : private workoutcomment?
