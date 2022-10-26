@@ -11,7 +11,7 @@
     "bcryptjs": "^2.4.3",
     "daisyui": "^2.14.2",
     "fetch": "^1.1.0",
-    "gsap": "^3.10.2",
+    "gsap": "^3.11.3",
     "register-service-worker": "^1.7.2",
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
