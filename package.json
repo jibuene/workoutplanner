@@ -9,7 +9,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
-    "daisyui": "^2.14.2",
+    "daisyui": "^2.50.2",
     "fetch": "^1.1.0",
     "gsap": "^3.10.2",
     "register-service-worker": "^1.7.2",
